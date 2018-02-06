@@ -2,119 +2,129 @@ module PianoNotes
     ( pianoNotesList, minPianoMidiNum, maxPianoMidiNum, nameFor, freqFor )
     where
 
-import MusicNote ( MusicNote(..), MidiNum, Freq )
+import MusicNote ( MusicNote(..), MidiNum(..), Freq(..) )
 import Data.List ( find )
 
-minPianoMidiNum = midiNum $ head pianoNotesList
-maxPianoMidiNum = midiNum $ last pianoNotesList
+
+minPianoMidiNum :: MidiNum
+minPianoMidiNum = midiNum_ $ head pianoNotesList
+
+
+maxPianoMidiNum :: MidiNum
+maxPianoMidiNum = midiNum_ $ last pianoNotesList
 
 
 musicNoteFor :: MidiNum -> Maybe MusicNote
-musicNoteFor n =
-    find (\ musicNote -> midiNum musicNote == n) pianoNotesList
+musicNoteFor midiNum =
+    find (\ musicNote -> midiNum_ musicNote == midiNum) pianoNotesList
+
 
 datumFor :: MidiNum -> (MusicNote -> a) -> Maybe a
-datumFor n fn =
-    maybe Nothing (\ musicNote -> Just $ fn musicNote) $ musicNoteFor n 
+datumFor midiNum fn =
+    maybe Nothing (\ musicNote -> Just $ fn musicNote) $ musicNoteFor midiNum 
+
 
 nameFor :: MidiNum -> Maybe String
-nameFor n =
-    datumFor n name
+nameFor midiNum =
+    datumFor midiNum name_
+
 
 freqFor :: MidiNum -> Maybe Freq
-freqFor n =
-    datumFor n freq 
+freqFor midiNum =
+    datumFor midiNum freq_
+
 
 
 pianoNotesList :: [] MusicNote
 pianoNotesList =
     -- http://newt.phys.unsw.edu.au/jw/notes.html
-    [ MusicNote 21 "A0"     27.500
-    , MusicNote 22 "A0#"            29.135
-    , MusicNote 23 "B0"     30.868 
-    , MusicNote 24 "C1"     32.703 
-    , MusicNote 25 "C1#"            34.648 
-    , MusicNote 26 "D1"     36.708 
-    , MusicNote 27 "D1#"            38.891 
-    , MusicNote 28 "E1"     41.203 
-    , MusicNote 29 "F1"     43.654 
-    , MusicNote 30 "F1#"            46.249 
-    , MusicNote 31 "G1"     48.999 
-    , MusicNote 32 "G1#"            51.913 
-    , MusicNote 33 "A1"     55.000 
-    , MusicNote 34 "A1#"            58.270 
-    , MusicNote 35 "B1"     61.735 
-    , MusicNote 36 "C2"     65.406 
-    , MusicNote 37 "C2#"            69.296 
-    , MusicNote 38 "D2"     73.416 
-    , MusicNote 39 "D2#"            77.782 
-    , MusicNote 40 "E2"     82.407 
-    , MusicNote 41 "F2"     87.307 
-    , MusicNote 42 "F2#"            92.499 
-    , MusicNote 43 "G2"     97.999 
-    , MusicNote 44 "G2#"            103.83 
-    , MusicNote 45 "A2"     110.00 
-    , MusicNote 46 "A2#"            116.54 
-    , MusicNote 47 "B2"     123.47 
-    , MusicNote 48 "C3"     130.81 
-    , MusicNote 49 "C3#"            138.59 
-    , MusicNote 50 "D3"     146.83 
-    , MusicNote 51 "D3#"            155.56 
-    , MusicNote 52 "E3"     164.81 
-    , MusicNote 53 "F3"     174.61 
-    , MusicNote 54 "F3#"            185.00 
-    , MusicNote 55 "G3"     196.00 
-    , MusicNote 56 "G3#"            207.65 
-    , MusicNote 57 "A3"     220.00 
-    , MusicNote 58 "A3#"            233.08 
-    , MusicNote 59 "B3"     246.94 
-    , MusicNote 60 "C4"     261.63  ------------- Middle C
-    , MusicNote 61 "C4#"            277.18 
-    , MusicNote 62 "D4"     293.67 
-    , MusicNote 63 "D4#"            311.13 
-    , MusicNote 64 "E4"     329.63 
-    , MusicNote 65 "F4"     349.23 
-    , MusicNote 66 "F4#"            369.99 
-    , MusicNote 67 "G4"     392.00 
-    , MusicNote 68 "G4#"            415.30 
-    , MusicNote 69 "A4"     440.00 
-    , MusicNote 70 "A4#"            466.16 
-    , MusicNote 71 "B4"     493.88 
-    , MusicNote 72 "C5"     523.25 
-    , MusicNote 73 "C5#"            554.37 
-    , MusicNote 74 "D5"     587.33 
-    , MusicNote 75 "D5#"            622.25 
-    , MusicNote 76 "E5"     659.26 
-    , MusicNote 77 "F5"     698.46 
-    , MusicNote 78 "F5#"            739.99 
-    , MusicNote 79 "G5"     783.99 
-    , MusicNote 80 "G5#"            830.61 
-    , MusicNote 81 "A5"     880.00 
-    , MusicNote 82 "A5#"            932.33 
-    , MusicNote 83 "B5"     987.77 
-    , MusicNote 84 "C6"     1046.5 
-    , MusicNote 85 "C6#"            1108.7 
-    , MusicNote 86 "D6"     1174.7 
-    , MusicNote 87 "D6#"            1244.5 
-    , MusicNote 88 "E6"     1318.5 
-    , MusicNote 89 "F6"     1396.9 
-    , MusicNote 90 "F6#"            1480.0 
-    , MusicNote 91 "G6"     1568.0 
-    , MusicNote 92 "G6#"            1661.2 
-    , MusicNote 93 "A6"     1760.0 
-    , MusicNote 94 "A6#"            1864.7 
-    , MusicNote 95 "B6"     1975.5 
-    , MusicNote 96 "C7"     2093.0 
-    , MusicNote 97 "C7#"            2217.5 
-    , MusicNote 98 "D7"     2349.3 
-    , MusicNote 99 "D7#"            2489.0 
-    , MusicNote 100 "E7"    2637.0 
-    , MusicNote 101 "F7"    2793.0 
-    , MusicNote 102 "F7#"           2960.0 
-    , MusicNote 103 "G7"    3136.0 
-    , MusicNote 104 "G7#"           3322.4 
-    , MusicNote 105 "A7"    3520.0 
-    , MusicNote 106 "A7#"           3729.3 
-    , MusicNote 107 "B7"    3951.1 
-    , MusicNote 108 "C8"    4186.0 
+    [ MusicNote (MidiNum 21) "A0"     (Freq 27.500)
+    , MusicNote (MidiNum 22) "A0#"            (Freq 29.135)
+    , MusicNote (MidiNum 23) "B0"     (Freq 30.868) 
+    , MusicNote (MidiNum 24) "C1"     (Freq 32.703) 
+    , MusicNote (MidiNum 25) "C1#"            (Freq 34.648) 
+    , MusicNote (MidiNum 26) "D1"     (Freq 36.708) 
+    , MusicNote (MidiNum 27) "D1#"            (Freq 38.891) 
+    , MusicNote (MidiNum 28) "E1"     (Freq 41.203) 
+    , MusicNote (MidiNum 29) "F1"     (Freq 43.654) 
+    , MusicNote (MidiNum 30) "F1#"            (Freq 46.249) 
+    , MusicNote (MidiNum 31) "G1"     (Freq 48.999) 
+    , MusicNote (MidiNum 32) "G1#"            (Freq 51.913) 
+    , MusicNote (MidiNum 33) "A1"     (Freq 55.000) 
+    , MusicNote (MidiNum 34) "A1#"            (Freq 58.270) 
+    , MusicNote (MidiNum 35) "B1"     (Freq 61.735) 
+    , MusicNote (MidiNum 36) "C2"     (Freq 65.406) 
+    , MusicNote (MidiNum 37) "C2#"            (Freq 69.296) 
+    , MusicNote (MidiNum 38) "D2"     (Freq 73.416) 
+    , MusicNote (MidiNum 39) "D2#"            (Freq 77.782) 
+    , MusicNote (MidiNum 40) "E2"     (Freq 82.407) 
+    , MusicNote (MidiNum 41) "F2"     (Freq 87.307) 
+    , MusicNote (MidiNum 42) "F2#"            (Freq 92.499) 
+    , MusicNote (MidiNum 43) "G2"     (Freq 97.999) 
+    , MusicNote (MidiNum 44) "G2#"            (Freq 103.83) 
+    , MusicNote (MidiNum 45) "A2"     (Freq 110.00) 
+    , MusicNote (MidiNum 46) "A2#"            (Freq 116.54) 
+    , MusicNote (MidiNum 47) "B2"     (Freq 123.47) 
+    , MusicNote (MidiNum 48) "C3"     (Freq 130.81) 
+    , MusicNote (MidiNum 49) "C3#"            (Freq 138.59) 
+    , MusicNote (MidiNum 50) "D3"     (Freq 146.83) 
+    , MusicNote (MidiNum 51) "D3#"            (Freq 155.56) 
+    , MusicNote (MidiNum 52) "E3"     (Freq 164.81) 
+    , MusicNote (MidiNum 53) "F3"     (Freq 174.61) 
+    , MusicNote (MidiNum 54) "F3#"            (Freq 185.00) 
+    , MusicNote (MidiNum 55) "G3"     (Freq 196.00) 
+    , MusicNote (MidiNum 56) "G3#"            (Freq 207.65) 
+    , MusicNote (MidiNum 57) "A3"     (Freq 220.00) 
+    , MusicNote (MidiNum 58) "A3#"            (Freq 233.08) 
+    , MusicNote (MidiNum 59) "B3"     (Freq 246.94) 
+    , MusicNote (MidiNum 60) "C4"     (Freq 261.63)  ------------- Middle C
+    , MusicNote (MidiNum 61) "C4#"            (Freq 277.18) 
+    , MusicNote (MidiNum 62) "D4"     (Freq 293.67) 
+    , MusicNote (MidiNum 63) "D4#"            (Freq 311.13) 
+    , MusicNote (MidiNum 64) "E4"     (Freq 329.63) 
+    , MusicNote (MidiNum 65) "F5"     (Freq 349.23)
+    , MusicNote (MidiNum 65) "F4"     (Freq 349.23) 
+    , MusicNote (MidiNum 66) "F4#"            (Freq 369.99) 
+    , MusicNote (MidiNum 67) "G4"     (Freq 392.00) 
+    , MusicNote (MidiNum 68) "G4#"            (Freq 415.30) 
+    , MusicNote (MidiNum 69) "A4"     (Freq 440.00) 
+    , MusicNote (MidiNum 70) "A4#"            (Freq 466.16) 
+    , MusicNote (MidiNum 71) "B4"     (Freq 493.88) 
+    , MusicNote (MidiNum 72) "C5"     (Freq 523.25) 
+    , MusicNote (MidiNum 73) "C5#"            (Freq 554.37) 
+    , MusicNote (MidiNum 74) "D5"     (Freq 587.33) 
+    , MusicNote (MidiNum 75) "D5#"            (Freq 622.25) 
+    , MusicNote (MidiNum 76) "E5"     (Freq 659.26) 
+    , MusicNote (MidiNum 77) "F5"     (Freq 698.46) 
+    , MusicNote (MidiNum 78) "F5#"            (Freq 739.99) 
+    , MusicNote (MidiNum 79) "G5"     (Freq 783.99) 
+    , MusicNote (MidiNum 80) "G5#"            (Freq 830.61) 
+    , MusicNote (MidiNum 81) "A5"     (Freq 880.00) 
+    , MusicNote (MidiNum 82) "A5#"            (Freq 932.33) 
+    , MusicNote (MidiNum 83) "B5"     (Freq 987.77) 
+    , MusicNote (MidiNum 84) "C6"     (Freq 1046.5) 
+    , MusicNote (MidiNum 85) "C6#"            (Freq 1108.7) 
+    , MusicNote (MidiNum 86) "D6"     (Freq 1174.7) 
+    , MusicNote (MidiNum 87) "D6#"            (Freq 1244.5) 
+    , MusicNote (MidiNum 88) "E6"     (Freq 1318.5) 
+    , MusicNote (MidiNum 89) "F6"     (Freq 1396.9) 
+    , MusicNote (MidiNum 90) "F6#"            (Freq 1480.0) 
+    , MusicNote (MidiNum 91) "G6"     (Freq 1568.0) 
+    , MusicNote (MidiNum 92) "G6#"            (Freq 1661.2) 
+    , MusicNote (MidiNum 93) "A6"     (Freq 1760.0) 
+    , MusicNote (MidiNum 94) "A6#"            (Freq 1864.7) 
+    , MusicNote (MidiNum 95) "B6"     (Freq 1975.5) 
+    , MusicNote (MidiNum 96) "C7"     (Freq 2093.0) 
+    , MusicNote (MidiNum 97) "C7#"            (Freq 2217.5) 
+    , MusicNote (MidiNum 98) "D7"     (Freq 2349.3) 
+    , MusicNote (MidiNum 99) "D7#"            (Freq 2489.0) 
+    , MusicNote (MidiNum 100) "E7"    (Freq 2637.0) 
+    , MusicNote (MidiNum 101) "F7"    (Freq 2793.0) 
+    , MusicNote (MidiNum 102) "F7#"           (Freq 2960.0) 
+    , MusicNote (MidiNum 103) "G7"    (Freq 3136.0) 
+    , MusicNote (MidiNum 104) "G7#"           (Freq 3322.4) 
+    , MusicNote (MidiNum 105) "A7"    (Freq 3520.0)
+    , MusicNote (MidiNum 106) "A7#"           (Freq 3729.3) 
+    , MusicNote (MidiNum 107) "B7"    (Freq 3951.1)
+    , MusicNote (MidiNum 108) "C8"    (Freq 4186.0)
     ]
