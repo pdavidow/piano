@@ -34,7 +34,6 @@ freqFor midiNum =
     datumFor midiNum freq_
 
 
-
 pianoNotesList :: [] MusicNote
 pianoNotesList =
     -- http://newt.phys.unsw.edu.au/jw/notes.html

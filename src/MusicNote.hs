@@ -1,4 +1,4 @@
-{-# LANGUAGE InstanceSigs #-} -- https://stackoverflow.com/questions/34699716/illegal-type-signature-in-instance-declaration
+{-# LANGUAGE InstanceSigs #-}
 
 module MusicNote
     ( MusicNote(..), MidiNum(..), Freq(..) )
