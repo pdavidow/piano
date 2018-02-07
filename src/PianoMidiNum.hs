@@ -1,3 +1,5 @@
+{-# LANGUAGE InstanceSigs #-} -- https://stackoverflow.com/questions/34699716/illegal-type-signature-in-instance-declaration
+
 module PianoMidiNum 
     ( PianoMidiNum -- hiding constructor
     , pianoMidiNumOn
@@ -14,10 +16,14 @@ newtype PianoMidiNum = PianoMidiNum MidiNum deriving (Eq, Ord, Show)
 
 
 instance Bounded PianoMidiNum where
+    minBound :: PianoMidiNum
     minBound = PianoMidiNum minMidiNum
+
+    maxBound :: PianoMidiNum
     maxBound = PianoMidiNum maxMidiNum
 
 
+-- todo use Either, or Validation
 pianoMidiNumOn :: MidiNum -> PianoMidiNum
 pianoMidiNumOn midiNum = 
     -- https://wiki.haskell.org/Smart_constructors

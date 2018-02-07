@@ -1,12 +1,26 @@
 import Test.Hspec
 import Control.Exception ( evaluate )
 
+import MusicNote ( MusicNote(..) )
 import PianoNotes ( minMidiNum, maxMidiNum, nameFor, freqFor )
 import MusicNote ( MidiNum(..), Freq(..) )
 import PianoMidiNum ( PianoMidiNum, pianoMidiNumOn, midiNumFrom ) 
 
 main :: IO ()
 main = hspec $ do
+    describe "MusicNote" $ do
+        describe "==" $ do
+            it "True" $ do
+                (MusicNote (MidiNum 1) "a" (Freq 1.1)) == (MusicNote (MidiNum 1) "b" (Freq 2.2))  `shouldBe` True
+            it "False" $ do
+                (MusicNote (MidiNum 1) "a" (Freq 1.1)) == (MusicNote (MidiNum 2) "a" (Freq 1.1))  `shouldBe` False    
+        describe "compare" $ do
+            it "LT" $ do
+                compare (MusicNote (MidiNum 1) "b" (Freq 2.2)) (MusicNote (MidiNum 2) "a" (Freq 1.1))  `shouldBe` LT   
+            it "GT" $ do
+                compare (MusicNote (MidiNum 2) "a" (Freq 1.1)) (MusicNote (MidiNum 1) "b" (Freq 2.2))  `shouldBe` GT   
+            it "EQ" $ do
+                compare (MusicNote (MidiNum 1) "a" (Freq 1.1)) (MusicNote (MidiNum 1) "b" (Freq 2.2))  `shouldBe` EQ             
     describe "PianoNotes" $ do
         describe "minMidiNum" $ do
             it "minMidiNum is MidiNum 21" $ do

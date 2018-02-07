@@ -1,3 +1,5 @@
+{-# LANGUAGE InstanceSigs #-} -- https://stackoverflow.com/questions/34699716/illegal-type-signature-in-instance-declaration
+
 module MusicNote
     ( MusicNote(..), MidiNum(..), Freq(..) )
     where
@@ -10,4 +12,14 @@ data MusicNote = MusicNote
     { midiNum_ :: MidiNum
     , name_ :: String
     , freq_ :: Freq
-    } deriving (Eq, Show)
+    } deriving (Show)
+
+
+instance Eq MusicNote where
+    (==) :: MusicNote -> MusicNote -> Bool
+    (==) (MusicNote x1 _ _) (MusicNote x2 _ _) = (==) x1 x2 
+
+
+instance Ord MusicNote where
+    compare :: MusicNote -> MusicNote -> Ordering
+    compare (MusicNote x1 _ _) (MusicNote x2 _ _) = compare x1 x2  
