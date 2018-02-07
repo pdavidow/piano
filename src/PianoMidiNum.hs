@@ -7,7 +7,6 @@ module PianoMidiNum
     ) 
     where
 
--- import Control.Exception ( assert ) -- see below...
 import MusicNote  ( MidiNum(..) )
 import PianoNotes ( minMidiNum, maxMidiNum )
 
@@ -23,24 +22,19 @@ instance Bounded PianoMidiNum where
     maxBound = PianoMidiNum maxMidiNum
 
 
--- todo use Either, or Validation
-pianoMidiNumOn :: MidiNum -> PianoMidiNum
+pianoMidiNumOn :: MidiNum -> Either String PianoMidiNum
 pianoMidiNumOn midiNum = 
-    -- https://wiki.haskell.org/Smart_constructors
     let
         (PianoMidiNum min) = minBound :: PianoMidiNum
         (PianoMidiNum max) = maxBound :: PianoMidiNum
-    in
-        -- alas, this doesn't test well in Hspec: evaluate (pianoMidiNumOn (MidiNum 20)) `shouldThrow` anyException
-        -- assert (midiNum >= min && midiNum <= max) 
-        --     $ PianoMidiNum midiNum
 
-        -- but this does:
+        errorString = "Not in range [" ++ show min ++ " through " ++ show max ++ "]" 
+    in
         if midiNum >= min && midiNum <= max then
-            PianoMidiNum midiNum
+            Right $ PianoMidiNum midiNum
         else
-            error $ "Invalid MidiNum" 
+            Left errorString
 
 
 midiNumFrom :: PianoMidiNum -> MidiNum
-midiNumFrom (PianoMidiNum midiNum) = midiNum
+midiNumFrom (PianoMidiNum x) = x

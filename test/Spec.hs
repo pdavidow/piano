@@ -1,5 +1,5 @@
 import Test.Hspec
-import Control.Exception ( evaluate )
+import Data.Either ( isRight, isLeft, fromRight, fromLeft )
 
 import MusicNote ( MusicNote(..) )
 import PianoNotes ( minMidiNum, maxMidiNum, nameFor, freqFor )
@@ -49,16 +49,21 @@ main = hspec $ do
             it "MidiNum 109 is Nothing" $ do
                 freqFor (MidiNum 109) `shouldBe` (Nothing :: Maybe Freq)
     describe "PianoMidiNum" $ do
+        describe "pianoMidiNumOn" $ do
+            it "valid: MidiNum 21" $ do
+                isRight (pianoMidiNumOn (MidiNum 21)) `shouldBe` True
+            it "invalid: MidiNum 20" $ do
+                isLeft (pianoMidiNumOn (MidiNum 20)) `shouldBe` True   
+            it "error for invalid" $ do
+                fromLeft "uhoh" (pianoMidiNumOn (MidiNum 20)) `shouldBe` "Not in range [MidiNum 21 through MidiNum 108]"                        
         describe "instance Bounded" $ do 
             describe "minBound" $ do 
-                it "at MidiNum 21" $ do       
-                    (minBound :: PianoMidiNum) == (pianoMidiNumOn (MidiNum 21)) `shouldBe` True
+                it "at MidiNum 21" $ do  
+                    -- use non-matching default
+                    (minBound :: PianoMidiNum) == (fromRight (maxBound :: PianoMidiNum) (pianoMidiNumOn (MidiNum 21))) `shouldBe` True
             describe "maxBound" $ do 
-                it "at MidiNum 108" $ do       
-                    (maxBound :: PianoMidiNum) == (pianoMidiNumOn (MidiNum 108)) `shouldBe` True
-        describe "pianoMidiNumOn" $ do
-            it "MidiNum 21 valid" $ do
-                midiNumFrom (pianoMidiNumOn (MidiNum 21)) `shouldBe` MidiNum 21
-            it "MidiNum 20 throws exception" $ do
-                evaluate (pianoMidiNumOn (MidiNum 20)) `shouldThrow` anyException
+                it "at MidiNum 108" $ do  
+                    -- use non-matching default
+                    (maxBound :: PianoMidiNum) == (fromRight (minBound :: PianoMidiNum) (pianoMidiNumOn (MidiNum 108))) `shouldBe` True
+
 
