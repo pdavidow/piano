@@ -55,7 +55,7 @@ main = hspec $ do
             it "invalid: MidiNum 20" $ do
                 isLeft (pianoMidiNumOn (MidiNum 20)) `shouldBe` True   
             it "error for invalid" $ do
-                fromLeft (PianoMidiNum_Invalid "uhoh") (pianoMidiNumOn (MidiNum 20)) `shouldBe` PianoMidiNum_Invalid "Not in range [MidiNum 21 through MidiNum 108]"                        
+                fromLeft (PianoMidiNum_Invalid "uhoh") (pianoMidiNumOn (MidiNum 20)) `shouldBe` PianoMidiNum_Invalid "MidiNum 20 not in range [MidiNum 21 through MidiNum 108]"                        
         describe "instance Bounded" $ do 
             describe "minBound" $ do 
                 it "at MidiNum 21" $ do  

@@ -32,7 +32,7 @@ pianoMidiNumOn midiNum =
         (PianoMidiNum min) = minBound :: PianoMidiNum
         (PianoMidiNum max) = maxBound :: PianoMidiNum
 
-        errorString = "Not in range [" ++ show min ++ " through " ++ show max ++ "]" 
+        errorString = show midiNum ++ " not in range [" ++ show min ++ " through " ++ show max ++ "]" 
     in
         if midiNum >= min && midiNum <= max then
             Right $ PianoMidiNum midiNum
