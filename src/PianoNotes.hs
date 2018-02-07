@@ -1,17 +1,17 @@
 module PianoNotes 
-    ( pianoNotesList, minPianoMidiNum, maxPianoMidiNum, nameFor, freqFor )
+    ( pianoNotesList, minMidiNum, maxMidiNum, nameFor, freqFor )
     where
 
 import MusicNote ( MusicNote(..), MidiNum(..), Freq(..) )
 import Data.List ( find )
 
 
-minPianoMidiNum :: MidiNum
-minPianoMidiNum = midiNum_ $ head pianoNotesList
+minMidiNum :: MidiNum
+minMidiNum = midiNum_ $ head pianoNotesList
 
 
-maxPianoMidiNum :: MidiNum
-maxPianoMidiNum = midiNum_ $ last pianoNotesList
+maxMidiNum :: MidiNum
+maxMidiNum = midiNum_ $ last pianoNotesList
 
 
 musicNoteFor :: MidiNum -> Maybe MusicNote
