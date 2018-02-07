@@ -4,7 +4,7 @@ import Data.Either ( isRight, isLeft, fromRight, fromLeft )
 import MusicNote ( MusicNote(..) )
 import PianoNotes ( minMidiNum, maxMidiNum, nameFor, freqFor )
 import MusicNote ( MidiNum(..), Freq(..) )
-import PianoMidiNum ( PianoMidiNum, pianoMidiNumOn, midiNumFrom ) 
+import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), pianoMidiNumOn, midiNumFrom ) 
 
 main :: IO ()
 main = hspec $ do
@@ -31,21 +31,21 @@ main = hspec $ do
             it "108" $ do
                 maxMidiNum `shouldBe` (MidiNum 108)
         describe "nameFor" $ do
+            it "MidiNum 20 is Nothing" $ do
+                nameFor (MidiNum 20) `shouldBe` (Nothing :: Maybe String)
             it "MidiNum 21 is Just A0" $ do
                 nameFor (MidiNum 21) `shouldBe` (Just "A0")
             it "MidiNum 108 is Just C8" $ do
                 nameFor (MidiNum 108) `shouldBe` (Just "C8")
-            it "MidiNum 20 is Nothing" $ do
-                nameFor (MidiNum 20) `shouldBe` (Nothing :: Maybe String)
             it "MidiNum 109 is Nothing" $ do
                 nameFor (MidiNum 109) `shouldBe` (Nothing :: Maybe String)
         describe "freqFor" $ do
+            it "MidiNum 20 is Nothing" $ do
+                freqFor (MidiNum 20) `shouldBe` (Nothing :: Maybe Freq)
             it "MidiNum 21 is Just Freq 27.500" $ do
                 freqFor (MidiNum 21) `shouldBe` (Just $ Freq 27.500)
             it "MidiNum 108 is Just Freq 4186.0" $ do
                 freqFor (MidiNum 108) `shouldBe` (Just $ Freq 4186.0)
-            it "MidiNum 20 is Nothing" $ do
-                freqFor (MidiNum 20) `shouldBe` (Nothing :: Maybe Freq)
             it "MidiNum 109 is Nothing" $ do
                 freqFor (MidiNum 109) `shouldBe` (Nothing :: Maybe Freq)
     describe "PianoMidiNum" $ do
@@ -55,7 +55,7 @@ main = hspec $ do
             it "invalid: MidiNum 20" $ do
                 isLeft (pianoMidiNumOn (MidiNum 20)) `shouldBe` True   
             it "error for invalid" $ do
-                fromLeft "uhoh" (pianoMidiNumOn (MidiNum 20)) `shouldBe` "Not in range [MidiNum 21 through MidiNum 108]"                        
+                fromLeft (PianoMidiNum_Invalid "uhoh") (pianoMidiNumOn (MidiNum 20)) `shouldBe` PianoMidiNum_Invalid "Not in range [MidiNum 21 through MidiNum 108]"                        
         describe "instance Bounded" $ do 
             describe "minBound" $ do 
                 it "at MidiNum 21" $ do  

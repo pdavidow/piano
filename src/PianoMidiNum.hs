@@ -2,6 +2,7 @@
 
 module PianoMidiNum 
     ( PianoMidiNum -- hiding constructor
+    , PianoMidiNum_Invalid(..)
     , pianoMidiNumOn
     , midiNumFrom 
     ) 
@@ -14,6 +15,9 @@ import PianoNotes ( minMidiNum, maxMidiNum )
 newtype PianoMidiNum = PianoMidiNum MidiNum deriving (Eq, Ord, Show)
 
 
+newtype PianoMidiNum_Invalid = PianoMidiNum_Invalid String deriving (Eq, Show)
+
+
 instance Bounded PianoMidiNum where
     minBound :: PianoMidiNum
     minBound = PianoMidiNum minMidiNum
@@ -22,7 +26,7 @@ instance Bounded PianoMidiNum where
     maxBound = PianoMidiNum maxMidiNum
 
 
-pianoMidiNumOn :: MidiNum -> Either String PianoMidiNum
+pianoMidiNumOn :: MidiNum -> Either PianoMidiNum_Invalid PianoMidiNum
 pianoMidiNumOn midiNum = 
     let
         (PianoMidiNum min) = minBound :: PianoMidiNum
@@ -33,7 +37,7 @@ pianoMidiNumOn midiNum =
         if midiNum >= min && midiNum <= max then
             Right $ PianoMidiNum midiNum
         else
-            Left errorString
+            Left $ PianoMidiNum_Invalid errorString
 
 
 midiNumFrom :: PianoMidiNum -> MidiNum
