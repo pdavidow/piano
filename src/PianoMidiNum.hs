@@ -33,7 +33,7 @@ pianoMidiNumOn midiNum =
         if midiNum >= min && midiNum <= max then
             PianoMidiNum midiNum
         else
-            error $ "MidiNum outside of inclusive range: {" ++ show (minBound :: PianoMidiNum) ++ " , " ++ show (maxBound :: PianoMidiNum) ++ "}"
+            error $ "Invalid MidiNum" 
 
 
 midiNumFrom :: PianoMidiNum -> MidiNum
