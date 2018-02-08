@@ -7,7 +7,7 @@ import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, toInt, basicShow )
 import MusicNote ( Freq(..) )
 import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), makePianoMidiNum, basicShow ) 
 import Lib ( Direction(..) )
-import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, arpeggiate, arpeggiateRun )
+import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
 
 
@@ -97,49 +97,59 @@ main = hspec $ do
                 PianoMidiNum.basicShow (fromRight (maxBound :: PianoMidiNum) (makePianoMidiNum (MidiNum 60))) `shouldBe` "60"                                   
     
     describe "Triad" $ do
+        describe "shiftTriadBySemitone" $ do
+            it "Major 3 Up" $ do
+                (map toInt $ notesFromTriad $ shiftTriadBySemitone 3 Up $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [63,67,70]
+            it "Major 3 Down" $ do
+                (map toInt $ notesFromTriad $ shiftTriadBySemitone 3 Down $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [57,61,64]        
+        describe "shiftTriadByOctave" $ do
+            it "Major 3 Up" $ do
+                (map toInt $ notesFromTriad $ shiftTriadByOctave 3 Up $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [96,100,103]
+            it "Major 3 Down" $ do
+                (map toInt $ notesFromTriad $ shiftTriadByOctave 3 Down $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [24,28,31]                                   
         describe "rootPosition" $ do 
             it "Major" $ do
-                (notesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` ((MidiNum 60), (MidiNum 64), (MidiNum 67))
+                (map toInt $ notesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` [60,64,67]
             it "Minor" $ do
-                (notesFromTriad $ TriadRootPosition (rootPosition Minor (MidiNum 60))) `shouldBe` ((MidiNum 60), (MidiNum 63), (MidiNum 67))
+                (map toInt $ notesFromTriad $ TriadRootPosition (rootPosition Minor (MidiNum 60))) `shouldBe` [60,63,67]
             it "Diminished" $ do
-                (notesFromTriad $ TriadRootPosition (rootPosition Diminished (MidiNum 60))) `shouldBe` ((MidiNum 60), (MidiNum 63), (MidiNum 66))
+                (map toInt $ notesFromTriad $ TriadRootPosition (rootPosition Diminished (MidiNum 60))) `shouldBe` [60,63,66] 
             it "Augmented" $ do
-                (notesFromTriad $ TriadRootPosition (rootPosition Augmented (MidiNum 60))) `shouldBe` ((MidiNum 60), (MidiNum 64), (MidiNum 68))
+                (map toInt $ notesFromTriad $ TriadRootPosition (rootPosition Augmented (MidiNum 60))) `shouldBe` [60,64,68] 
         describe "firstInversion" $ do 
             it "Major" $ do
-                (notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 64), (MidiNum 67))
+                (map toInt $ notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [72,64,67] 
             it "Minor" $ do
-                (notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Minor (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 63), (MidiNum 67))
+                (map toInt $ notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Minor (MidiNum 60))) `shouldBe` [72,63,67]
             it "Diminished" $ do
-                (notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 63), (MidiNum 66))
+                (map toInt $ notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` [72,63,66]
             it "Augmented" $ do
-                (notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 64), (MidiNum 68))
+                (map toInt $ notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` [72,64,68]
         describe "secondInversion" $ do 
             it "Major" $ do
-                (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 76), (MidiNum 67))
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [72,76,67]
             it "Minor" $ do
-                (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Minor (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 75), (MidiNum 67))
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Minor (MidiNum 60))) `shouldBe` [72,75,67] 
             it "Diminished" $ do
-                (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 75), (MidiNum 66))
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` [72,75,66]
             it "Augmented" $ do
-                (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 76), (MidiNum 68))    
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` [72,76,68]     
         describe "arpeggiate" $ do    
             describe "RootPosition" $ do    
                 it "Up" $ do   
-                    arpeggiate Up (TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 60), (MidiNum 64), (MidiNum 67)]
+                    (map toInt $ arpeggiate Up $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [60,64,67] 
                 it "Down" $ do   
-                    arpeggiate Down (TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 67), (MidiNum 64), (MidiNum 60)]
+                    (map toInt $ arpeggiate Down $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [67,64,60] 
             describe "FirstInversion" $ do    
                 it "Up" $ do   
-                    arpeggiate Up (TriadFirstInversion (firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 64), (MidiNum 67), (MidiNum 72)]
+                    (map toInt $ arpeggiate Up $ TriadFirstInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [64,67,72] 
                 it "Down" $ do   
-                    arpeggiate Down (TriadFirstInversion (firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 72), (MidiNum 67), (MidiNum 64)]
+                    (map toInt $ arpeggiate Down $ TriadFirstInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [72,67,64] 
             describe "SecondInversion" $ do    
                 it "Up" $ do   
-                    arpeggiate Up (TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 67), (MidiNum 72), (MidiNum 76)]
+                    (map toInt $ arpeggiate Up $ TriadSecondInversion $ secondInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [67,72,76] 
                 it "Down" $ do   
-                    arpeggiate Down (TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 76), (MidiNum 72), (MidiNum 67)]
+                    (map toInt $ arpeggiate Down $ TriadSecondInversion $ secondInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [76,72,67] 
         describe "arpeggiateRun" $ do 
             describe "Major" $ do
                 it "21 Up, piano bounded" $ do
@@ -223,12 +233,12 @@ main = hspec $ do
         describe "instance Show" $ do      
             describe "show" $ do    
                 it "valid" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` "<60 64 67>"
+                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` "<60 64 67>"
                 it "partially BelowRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 20))) `shouldBe` "<-- 24 27>"
+                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 20) `shouldBe` "<-- 24 27>"
                 it "partially AboveRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 104))) `shouldBe` "<104 108 ++>"
+                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 104) `shouldBe` "<104 108 ++>"
                 it "totally BelowRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 10))) `shouldBe` "<-- -- -->"
+                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 10) `shouldBe` "<-- -- -->"
                 it "totally AboveRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 110))) `shouldBe` "<++ ++ ++>"
+                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 110) `shouldBe` "<++ ++ ++>"

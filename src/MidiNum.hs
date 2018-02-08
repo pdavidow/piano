@@ -23,7 +23,7 @@ shiftBySemitone count direction (MidiNum n) =
             Up -> (+)
             Down -> (-)        
     in
-        MidiNum $ operator n count
+        MidiNum $ operator n $ abs count -- or get fancy with LiquidHaskell ro enforce positive int...
 
 
 shiftByOctave :: Int -> Direction -> MidiNum -> MidiNum

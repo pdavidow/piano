@@ -31,7 +31,7 @@ instance Show PianoNotes where
 pianoNotesFromTriad :: Triad -> PianoNotes
 pianoNotesFromTriad triad =
     let
-        (n1, n2, n3) = notesFromTriad triad
+        [n1, n2, n3] = notesFromTriad triad
     in
         PianoNotes (makePianoMidiNum n1) (makePianoMidiNum n2) (makePianoMidiNum n3)
 
