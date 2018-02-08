@@ -3,18 +3,19 @@
 module PianoMidiNum 
     ( PianoMidiNum -- hiding constructor
     , PianoMidiNum_Invalid(..)
-    , pianoMidiNumOn
+    , makePianoMidiNum
     , midiNumFrom 
     ) 
     where
 
-import MusicNote  ( MidiNum(..) )
+import MidiNum ( MidiNum(..) )
 import PianoNotes ( minMidiNum, maxMidiNum )
 
 
 newtype PianoMidiNum = PianoMidiNum MidiNum deriving (Eq, Ord, Show)
 
 
+-- todo add constructors BelowRange | AboveRange
 newtype PianoMidiNum_Invalid = PianoMidiNum_Invalid String deriving (Eq, Show)
 
 
@@ -26,8 +27,8 @@ instance Bounded PianoMidiNum where
     maxBound = PianoMidiNum maxMidiNum
 
 
-pianoMidiNumOn :: MidiNum -> Either PianoMidiNum_Invalid PianoMidiNum
-pianoMidiNumOn midiNum = 
+makePianoMidiNum :: MidiNum -> Either PianoMidiNum_Invalid PianoMidiNum
+makePianoMidiNum midiNum = 
     let
         (PianoMidiNum min) = minBound :: PianoMidiNum
         (PianoMidiNum max) = maxBound :: PianoMidiNum

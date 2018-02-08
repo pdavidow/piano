@@ -2,8 +2,10 @@ module PianoNotes
     ( pianoNotesList, minMidiNum, maxMidiNum, nameFor, freqFor )
     where
 
-import MusicNote ( MusicNote(..), MidiNum(..), Freq(..) )
 import Data.List ( find )
+
+import MidiNum ( MidiNum(..) )
+import MusicNote ( MusicNote(..), Freq(..) )
 
 
 minMidiNum :: MidiNum
@@ -34,7 +36,7 @@ freqFor midiNum =
     datumFor midiNum freq_
 
 
-pianoNotesList :: [] MusicNote
+pianoNotesList :: [MusicNote]
 pianoNotesList =
     -- http://newt.phys.unsw.edu.au/jw/notes.html
     [ MusicNote (MidiNum 21) "A0"     (Freq 27.500)

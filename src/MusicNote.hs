@@ -1,11 +1,14 @@
 {-# LANGUAGE InstanceSigs #-}
 
 module MusicNote
-    ( MusicNote(..), MidiNum(..), Freq(..) )
+    ( MusicNote(..), Freq(..) )
     where
 
-newtype MidiNum = MidiNum Int deriving (Eq, Ord, Show)
+import MidiNum ( MidiNum(..) )
+
+
 newtype Freq = Freq Float deriving (Eq, Ord, Show)
+
 
 data MusicNote = MusicNote 
     -- todo https://ghc.haskell.org/trac/ghc/wiki/Records/OverloadedRecordFields/DuplicateRecordFields
