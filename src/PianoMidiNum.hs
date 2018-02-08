@@ -5,10 +5,11 @@ module PianoMidiNum
     , PianoMidiNum_Invalid(..)
     , makePianoMidiNum
     , midiNumFrom 
+    , PianoMidiNum.basicShow
     ) 
     where
 
-import MidiNum ( MidiNum(..) )
+import MidiNum ( MidiNum(..), basicShow )
 import PianoNotes ( minMidiNum, maxMidiNum )
 
 
@@ -16,7 +17,10 @@ newtype PianoMidiNum = PianoMidiNum MidiNum deriving (Eq, Ord, Show)
 
 
 -- todo add constructors BelowRange | AboveRange
-newtype PianoMidiNum_Invalid = PianoMidiNum_Invalid String deriving (Eq, Show)
+data PianoMidiNum_Invalid 
+    = BelowRange String
+    | AboveRange String
+    deriving (Eq, Show)
 
 
 instance Bounded PianoMidiNum where
@@ -38,8 +42,15 @@ makePianoMidiNum midiNum =
         if midiNum >= min && midiNum <= max then
             Right $ PianoMidiNum midiNum
         else
-            Left $ PianoMidiNum_Invalid errorString
+            if midiNum < min then 
+                Left $ BelowRange errorString
+            else
+                Left $ AboveRange errorString
 
 
 midiNumFrom :: PianoMidiNum -> MidiNum
 midiNumFrom (PianoMidiNum x) = x
+
+
+basicShow :: PianoMidiNum -> String
+basicShow (PianoMidiNum midiNum) = MidiNum.basicShow midiNum

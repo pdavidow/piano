@@ -2,6 +2,7 @@ module MidiNum
     ( MidiNum(..)
     , shiftBySemitone
     , shiftByOctave
+    , basicShow
     )
     where
 
@@ -25,3 +26,7 @@ shiftBySemitone count direction (MidiNum n) =
 shiftByOctave :: Int -> Direction -> MidiNum -> MidiNum
 shiftByOctave octaveCount direction midiNum = 
     shiftBySemitone (octaveCount * octaveSemitoneCount) direction midiNum
+
+
+basicShow :: MidiNum -> String
+basicShow (MidiNum n) = show n

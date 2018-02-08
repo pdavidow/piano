@@ -3,15 +3,17 @@ import Data.Either ( isRight, isLeft, fromRight, fromLeft )
 
 import MusicNote ( MusicNote(..) )
 import PianoNotes ( minMidiNum, maxMidiNum, nameFor, freqFor )
-import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave )
+import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, basicShow )
 import MusicNote ( Freq(..) )
-import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), makePianoMidiNum, midiNumFrom ) 
+import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), makePianoMidiNum, midiNumFrom, basicShow ) 
 import Lib ( Direction(..) )
 import Triad ( Triad(..), Style(..), notesFromTriad, rootPosition, firstInversion, secondInversion )
+import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
 
 
 main :: IO ()
 main = hspec $ do
+
     describe "MidiNum" $ do
         describe "shiftBySemitone" $ do
             it "Up 3" $ do
@@ -26,7 +28,11 @@ main = hspec $ do
             it "Up 2" $ do
                 (shiftByOctave 2 Up (MidiNum 1)) `shouldBe` MidiNum 25
             it "Down 2" $ do
-                (shiftByOctave 2 Down (MidiNum 24)) `shouldBe` MidiNum 0                
+                (shiftByOctave 2 Down (MidiNum 24)) `shouldBe` MidiNum 0   
+        describe "basicShow" $ do
+            it "shows only Int" $ do
+                (MidiNum.basicShow (MidiNum 24)) `shouldBe` "24"
+
     describe "MusicNote" $ do
         describe "instance Eq" $ do 
             describe "==" $ do
@@ -42,6 +48,7 @@ main = hspec $ do
                     compare (MusicNote (MidiNum 2) "a" (Freq 1.1)) (MusicNote (MidiNum 1) "b" (Freq 2.2))  `shouldBe` GT   
                 it "EQ" $ do
                     compare (MusicNote (MidiNum 1) "a" (Freq 1.1)) (MusicNote (MidiNum 1) "b" (Freq 2.2))  `shouldBe` EQ             
+    
     describe "PianoNotes" $ do
         describe "minMidiNum" $ do
             it "21" $ do
@@ -67,6 +74,7 @@ main = hspec $ do
                 freqFor (MidiNum 108) `shouldBe` (Just $ Freq 4186.0)
             it "MidiNum 109 is Nothing" $ do
                 freqFor (MidiNum 109) `shouldBe` (Nothing :: Maybe Freq)
+
     describe "PianoMidiNum" $ do
         describe "instance Bounded" $ do 
             describe "minBound" $ do 
@@ -83,7 +91,11 @@ main = hspec $ do
             it "invalid: MidiNum 20" $ do
                 isLeft (makePianoMidiNum (MidiNum 20)) `shouldBe` True   
             it "error for invalid" $ do
-                fromLeft (PianoMidiNum_Invalid "uhoh") (makePianoMidiNum (MidiNum 20)) `shouldBe` PianoMidiNum_Invalid "MidiNum 20 not in range [MidiNum 21 through MidiNum 108]"                        
+                fromLeft (BelowRange "uhoh") (makePianoMidiNum (MidiNum 20)) `shouldBe` BelowRange "MidiNum 20 not in range [MidiNum 21 through MidiNum 108]"     
+        describe "basicShow" $ do
+            it "shows only Int" $ do
+                PianoMidiNum.basicShow (fromRight (maxBound :: PianoMidiNum) (makePianoMidiNum (MidiNum 60))) `shouldBe` "60"                                   
+    
     describe "Triad" $ do
         describe "rootPosition" $ do 
             it "Major" $ do
@@ -112,3 +124,17 @@ main = hspec $ do
                 (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 75), (MidiNum 66))
             it "Augmented" $ do
                 (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 76), (MidiNum 68))    
+    
+    describe "PianoNotes" $ do     
+        describe "instance Show" $ do      
+            describe "show" $ do    
+                it "valid" $ do
+                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` "<60 64 67>"
+                it "partially BelowRange" $ do
+                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 20))) `shouldBe` "<-- 24 27>"
+                it "partially AboveRange" $ do
+                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 104))) `shouldBe` "<104 108 ++>"
+                it "totally BelowRange" $ do
+                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 10))) `shouldBe` "<-- -- -->"
+                it "totally AboveRange" $ do
+                    (show $ pianoNotesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 110))) `shouldBe` "<++ ++ ++>"
