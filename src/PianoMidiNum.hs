@@ -4,7 +4,7 @@ module PianoMidiNum
     ( PianoMidiNum -- hiding constructor
     , PianoMidiNum_Invalid(..)
     , makePianoMidiNum
-    , midiNumFrom 
+    , toMidiNum 
     , PianoMidiNum.basicShow
     ) 
     where
@@ -16,7 +16,6 @@ import PianoNotes ( minMidiNum, maxMidiNum )
 newtype PianoMidiNum = PianoMidiNum MidiNum deriving (Eq, Ord, Show)
 
 
--- todo add constructors BelowRange | AboveRange
 data PianoMidiNum_Invalid 
     = BelowRange String
     | AboveRange String
@@ -48,9 +47,9 @@ makePianoMidiNum midiNum =
                 Left $ AboveRange errorString
 
 
-midiNumFrom :: PianoMidiNum -> MidiNum
-midiNumFrom (PianoMidiNum x) = x
+toMidiNum :: PianoMidiNum -> MidiNum
+toMidiNum (PianoMidiNum n) = n
 
 
 basicShow :: PianoMidiNum -> String
-basicShow (PianoMidiNum midiNum) = MidiNum.basicShow midiNum
+basicShow p = MidiNum.basicShow $ toMidiNum p

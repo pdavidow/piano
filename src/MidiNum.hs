@@ -1,7 +1,10 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module MidiNum
     ( MidiNum(..)
     , shiftBySemitone
     , shiftByOctave
+    , toInt
     , basicShow
     )
     where
@@ -10,7 +13,7 @@ import Lib ( Direction(..), octaveSemitoneCount )
 
 
 -- Treated as boundless
-newtype MidiNum = MidiNum Int deriving (Eq, Ord, Show)
+newtype MidiNum = MidiNum Int deriving (Enum, Eq, Ord, Show)
 
 
 shiftBySemitone :: Int -> Direction -> MidiNum -> MidiNum
@@ -28,5 +31,9 @@ shiftByOctave octaveCount direction midiNum =
     shiftBySemitone (octaveCount * octaveSemitoneCount) direction midiNum
 
 
+toInt :: MidiNum -> Int
+toInt (MidiNum n) = n
+
+
 basicShow :: MidiNum -> String
-basicShow (MidiNum n) = show n
+basicShow m = show $ toInt m
