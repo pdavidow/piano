@@ -10,6 +10,7 @@ module Triad
     , rootPosition
     , firstInversion
     , secondInversion
+    , arpeggiate
     )
     where
 
@@ -94,3 +95,26 @@ secondInversion (FirstInversion style (Notes n1 n3 n5)) =
         , root = n1
         , fifth = n5
         }   
+
+
+arpeggiate :: Direction -> Triad -> [MidiNum]
+arpeggiate direction triad =
+    let
+        fn = case direction of
+            Up -> arpeggiateUp 
+            Down -> arpeggiateDown 
+    in
+        fn triad
+
+
+arpeggiateUp :: Triad -> [MidiNum]
+arpeggiateUp triad =
+    case triad of 
+        TriadRootPosition (RootPosition _ (Notes n1 n3 n5)) ->       [n1, n3, n5]
+        TriadFirstInversion (FirstInversion _ (Notes n1 n3 n5)) ->   [n3, n5, n1]
+        TriadSecondInversion (SecondInversion _ (Notes n1 n3 n5)) -> [n5, n1, n3]
+
+
+arpeggiateDown :: Triad -> [MidiNum]
+arpeggiateDown triad =
+    reverse $ arpeggiateUp triad

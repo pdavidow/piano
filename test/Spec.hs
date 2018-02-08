@@ -7,7 +7,7 @@ import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, basicShow )
 import MusicNote ( Freq(..) )
 import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), makePianoMidiNum, midiNumFrom, basicShow ) 
 import Lib ( Direction(..) )
-import Triad ( Triad(..), Style(..), notesFromTriad, rootPosition, firstInversion, secondInversion )
+import Triad ( Triad(..), Style(..), notesFromTriad, rootPosition, firstInversion, secondInversion, arpeggiate )
 import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
 
 
@@ -124,7 +124,24 @@ main = hspec $ do
                 (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 75), (MidiNum 66))
             it "Augmented" $ do
                 (notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` ((MidiNum 72), (MidiNum 76), (MidiNum 68))    
-    
+        describe "arpeggiate" $ do    
+            describe "RootPosition" $ do    
+                it "Up" $ do   
+                    arpeggiate Up (TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 60), (MidiNum 64), (MidiNum 67)]
+                it "Down" $ do   
+                    arpeggiate Down (TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 67), (MidiNum 64), (MidiNum 60)]
+            describe "FirstInversion" $ do    
+                it "Up" $ do   
+                    arpeggiate Up (TriadFirstInversion (firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 64), (MidiNum 67), (MidiNum 72)]
+                it "Down" $ do   
+                    arpeggiate Down (TriadFirstInversion (firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 72), (MidiNum 67), (MidiNum 64)]
+            describe "SecondInversion" $ do    
+                it "Up" $ do   
+                    arpeggiate Up (TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 67), (MidiNum 72), (MidiNum 76)]
+                it "Down" $ do   
+                    arpeggiate Down (TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [(MidiNum 76), (MidiNum 72), (MidiNum 67)]
+
+
     describe "PianoNotes" $ do     
         describe "instance Show" $ do      
             describe "show" $ do    
