@@ -9,7 +9,7 @@ module MidiNum
     )
     where
 
-import Lib ( Direction(..), octaveSemitoneCount ) 
+import Lib ( octaveSemitoneCount ) 
 
 
 -- Treated as boundless

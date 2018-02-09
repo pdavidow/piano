@@ -20,6 +20,7 @@ module Triad
 -- https://www.musictheoryacademy.com/understanding-music/triads/
 -- https://www.musictheoryacademy.com/understanding-music/chord-inversions/
 
+import Data.Range.Range ( Range, inRange )
 import MidiNum ( MidiNum(..), shiftByOctave, shiftBySemitone )
 import Lib ( Direction(..) )
 
@@ -122,7 +123,7 @@ arpeggiateDown triad =
     reverse $ arpeggiateUp triad
 
 
-arpeggiateRun :: [MidiNum] -> Tone -> Direction -> MidiNum -> [MidiNum]
+arpeggiateRun :: Range MidiNum -> Tone -> Direction -> MidiNum -> [MidiNum]
 arpeggiateRun range tone direction start = 
     let
         rootPos = rootPosition tone start
@@ -131,20 +132,18 @@ arpeggiateRun range tone direction start =
         triad = case direction of
             Up -> TriadRootPosition rootPos
             Down -> shiftTriadByOctave (-1) $ TriadFirstInversion firstInv 
-
-        isStartWithinRange = elem start range
     in
-        if isStartWithinRange then
+        if inRange range start then
             arpeggiateRecurse range direction triad
         else
             []
 
 
-arpeggiateRecurse :: [MidiNum] -> Direction -> Triad -> [MidiNum]
+arpeggiateRecurse :: Range MidiNum -> Direction -> Triad -> [MidiNum]
 arpeggiateRecurse range direction triad =
     let
         midiNums = arpeggiate direction triad
-        filtered = filter (\ n -> elem n range) midiNums
+        filtered = filter (\ n -> inRange range n) midiNums
         isAllWithinRange = (length midiNums == length filtered)
 
         count = case direction of

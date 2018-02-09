@@ -29,6 +29,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , range 
   exposed-modules:
       Lib
       MidiNum
@@ -49,6 +50,7 @@ executable piano-exe
   build-depends:
       base >=4.7 && <5
     , piano
+    , range 
   exposed-modules:
       Lib
       MidiNum
@@ -71,6 +73,7 @@ test-suite piano-test
       base >=4.7 && <5
     , piano
     , hspec
+    , range 
   other-modules:
       Paths_piano
   default-language: Haskell2010
