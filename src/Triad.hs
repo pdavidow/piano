@@ -84,7 +84,7 @@ rootPosition tone root =
 firstInversion :: RootPosition -> FirstInversion
 firstInversion (RootPosition tone (Notes n1 n3 n5)) =
     FirstInversion tone $ Notes
-        { root = MidiNum.shiftByOctave 1 Up n1
+        { root = MidiNum.shiftByOctave 1 n1
         , fifth = n5
         , third = n3
         }   
@@ -93,7 +93,7 @@ firstInversion (RootPosition tone (Notes n1 n3 n5)) =
 secondInversion :: FirstInversion -> SecondInversion
 secondInversion (FirstInversion tone (Notes n1 n3 n5)) =
     SecondInversion tone $ Notes
-        { third = MidiNum.shiftByOctave 1 Up n3
+        { third = MidiNum.shiftByOctave 1 n3
         , root = n1
         , fifth = n5
         }   
@@ -130,37 +130,41 @@ arpeggiateRun range tone direction start =
 
         triad = case direction of
             Up -> TriadRootPosition rootPos
-            Down -> shiftTriadByOctave 1 Down $ TriadFirstInversion firstInv 
+            Down -> shiftTriadByOctave (-1) $ TriadFirstInversion firstInv 
 
         isStartWithinRange = elem start range
     in
         if isStartWithinRange then
-            arpeggiateByTriad range direction triad
+            arpeggiateRecurse range direction triad
         else
             []
 
 
-arpeggiateByTriad :: [MidiNum] -> Direction -> Triad -> [MidiNum]
-arpeggiateByTriad range direction triad =
+arpeggiateRecurse :: [MidiNum] -> Direction -> Triad -> [MidiNum]
+arpeggiateRecurse range direction triad =
     let
         midiNums = arpeggiate direction triad
         filtered = filter (\ n -> elem n range) midiNums
         isAllWithinRange = (length midiNums == length filtered)
+
+        count = case direction of
+            Up -> 1
+            Down -> -1   
     in
         if isAllWithinRange then
-            filtered ++ (arpeggiateByTriad range direction $ shiftTriadByOctave 1 direction triad)
+            filtered ++ (arpeggiateRecurse range direction $ shiftTriadByOctave count triad)
         else
             filtered            
 
 
-shiftTriadBySemitone :: Int -> Direction -> Triad -> Triad
-shiftTriadBySemitone count direction triad =    
-    shiftTriadBy (shiftNotesBySemitone count direction) triad             
+shiftTriadBySemitone :: Int -> Triad -> Triad
+shiftTriadBySemitone count triad =    
+    shiftTriadBy (shiftNotesBySemitone count) triad             
 
 
-shiftTriadByOctave :: Int -> Direction -> Triad -> Triad
-shiftTriadByOctave count direction triad = 
-    shiftTriadBy (shiftNotesByOctave count direction) triad   
+shiftTriadByOctave :: Int -> Triad -> Triad
+shiftTriadByOctave count triad = 
+    shiftTriadBy (shiftNotesByOctave count) triad   
 
 
 shiftTriadBy :: (Notes -> Notes) -> Triad -> Triad
@@ -171,15 +175,16 @@ shiftTriadBy fn triad =
         TriadSecondInversion (SecondInversion tone notes) -> TriadSecondInversion (SecondInversion tone $ fn notes)   
 
 
-shiftNotesBySemitone :: Int -> Direction -> Notes -> Notes
-shiftNotesBySemitone count direction notes =
-    shiftNotesBy (MidiNum.shiftBySemitone count direction) notes
+shiftNotesBySemitone :: Int -> Notes -> Notes
+shiftNotesBySemitone count notes =
+    shiftNotesBy (MidiNum.shiftBySemitone count) notes
 
 
-shiftNotesByOctave :: Int -> Direction -> Notes -> Notes    
-shiftNotesByOctave count direction notes =
-    shiftNotesBy (MidiNum.shiftByOctave count direction) notes
+shiftNotesByOctave :: Int -> Notes -> Notes    
+shiftNotesByOctave count notes =
+    shiftNotesBy (MidiNum.shiftByOctave count) notes
 
 
 shiftNotesBy :: (MidiNum -> MidiNum) -> Notes -> Notes
-shiftNotesBy fn (Notes n1 n2 n3) = Notes (fn n1) (fn n2) (fn n3)           
+shiftNotesBy fn (Notes n1 n2 n3) = 
+    Notes (fn n1) (fn n2) (fn n3)           

@@ -16,19 +16,14 @@ import Lib ( Direction(..), octaveSemitoneCount )
 newtype MidiNum = MidiNum Int deriving (Enum, Eq, Ord, Show)
 
 
-shiftBySemitone :: Int -> Direction -> MidiNum -> MidiNum
-shiftBySemitone count direction (MidiNum n) =
-    let
-        operator = case direction of
-            Up -> (+)
-            Down -> (-)        
-    in
-        MidiNum $ operator n $ abs count -- or get fancy with LiquidHaskell ro enforce positive int...
+shiftBySemitone :: Int -> MidiNum -> MidiNum
+shiftBySemitone count (MidiNum n) =
+    MidiNum $ n + count 
 
 
-shiftByOctave :: Int -> Direction -> MidiNum -> MidiNum
-shiftByOctave octaveCount direction midiNum = 
-    shiftBySemitone (octaveCount * octaveSemitoneCount) direction midiNum
+shiftByOctave :: Int -> MidiNum -> MidiNum
+shiftByOctave octaveCount midiNum = 
+    shiftBySemitone (octaveCount * octaveSemitoneCount) midiNum
 
 
 toInt :: MidiNum -> Int

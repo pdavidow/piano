@@ -16,19 +16,19 @@ main = hspec $ do
 
     describe "MidiNum" $ do
         describe "shiftBySemitone" $ do
-            it "Up 3" $ do
-                (shiftBySemitone 3 Up (MidiNum 1)) `shouldBe` MidiNum 4
-            it "Down 3" $ do
-                (shiftBySemitone 3 Down (MidiNum 4)) `shouldBe` MidiNum 1
+            it "+3" $ do
+                (shiftBySemitone 3 $ MidiNum 1) `shouldBe` MidiNum 4
+            it "-3" $ do
+                (shiftBySemitone (-3) $ MidiNum 4) `shouldBe` MidiNum 1
         describe "shiftByOctave" $ do
-            it "Up 1" $ do
-                (shiftByOctave 1 Up (MidiNum 1)) `shouldBe` MidiNum 13
-            it "Down 1" $ do
-                (shiftByOctave 1 Down (MidiNum 24)) `shouldBe` MidiNum 12
-            it "Up 2" $ do
-                (shiftByOctave 2 Up (MidiNum 1)) `shouldBe` MidiNum 25
-            it "Down 2" $ do
-                (shiftByOctave 2 Down (MidiNum 24)) `shouldBe` MidiNum 0   
+            it "+1" $ do
+                (shiftByOctave 1 $ MidiNum 1) `shouldBe` MidiNum 13
+            it "-1" $ do
+                (shiftByOctave (-1) $ MidiNum 24) `shouldBe` MidiNum 12
+            it "+2" $ do
+                (shiftByOctave 2 $ MidiNum 1) `shouldBe` MidiNum 25
+            it "-2" $ do
+                (shiftByOctave (-2) $ MidiNum 24) `shouldBe` MidiNum 0   
         describe "basicShow" $ do
             it "shows only Int" $ do
                 (MidiNum.basicShow (MidiNum 24)) `shouldBe` "24"
@@ -98,15 +98,15 @@ main = hspec $ do
     
     describe "Triad" $ do
         describe "shiftTriadBySemitone" $ do
-            it "Major 3 Up" $ do
-                (map toInt $ notesFromTriad $ shiftTriadBySemitone 3 Up $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [63,67,70]
-            it "Major 3 Down" $ do
-                (map toInt $ notesFromTriad $ shiftTriadBySemitone 3 Down $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [57,61,64]        
+            it "+3" $ do
+                (map toInt $ notesFromTriad $ shiftTriadBySemitone 3 $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [63,67,70]
+            it "-3" $ do
+                (map toInt $ notesFromTriad $ shiftTriadBySemitone (-3) $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [57,61,64]        
         describe "shiftTriadByOctave" $ do
-            it "Major 3 Up" $ do
-                (map toInt $ notesFromTriad $ shiftTriadByOctave 3 Up $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [96,100,103]
-            it "Major 3 Down" $ do
-                (map toInt $ notesFromTriad $ shiftTriadByOctave 3 Down $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [24,28,31]                                   
+            it "+3" $ do
+                (map toInt $ notesFromTriad $ shiftTriadByOctave 3 $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [96,100,103]
+            it "-3" $ do
+                (map toInt $ notesFromTriad $ shiftTriadByOctave (-3) $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [24,28,31]                                   
         describe "rootPosition" $ do 
             it "Major" $ do
                 (map toInt $ notesFromTriad $ TriadRootPosition (rootPosition Major (MidiNum 60))) `shouldBe` [60,64,67]
