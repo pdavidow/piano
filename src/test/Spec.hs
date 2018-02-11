@@ -11,7 +11,7 @@ import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
 
-
+-- QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
 main :: IO ()
 main = hspec $ do
 
