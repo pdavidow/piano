@@ -8,7 +8,7 @@ import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, toInt, basicShow )
 import MusicNote ( Freq(..) )
 import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), makePianoMidiNum, basicShow ) 
 import Lib ( Direction(..) )
-import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
+import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
 
 

@@ -10,6 +10,7 @@ module Triad
     , rootPosition
     , firstInversion
     , secondInversion
+    , secondInversionFromRootPosition
     , shiftTriadBySemitone
     , shiftTriadByOctave
     , arpeggiate
@@ -99,6 +100,10 @@ secondInversion (FirstInversion tone (Notes n1 n3 n5)) =
         , fifth = n5
         }   
         
+
+secondInversionFromRootPosition :: RootPosition -> SecondInversion
+secondInversionFromRootPosition rootPosition =
+    (secondInversion . firstInversion) rootPosition
 
 arpeggiate :: Direction -> Triad -> [MidiNum]
 arpeggiate direction triad =
