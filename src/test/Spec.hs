@@ -11,7 +11,7 @@ import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
 
--- QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
+
 main :: IO ()
 main = hspec $ do
 
@@ -128,13 +128,13 @@ main = hspec $ do
                 (map toInt $ notesFromTriad $ TriadFirstInversion (firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` [72,64,68]
         describe "secondInversion" $ do 
             it "Major" $ do
-                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Major (MidiNum 60))) `shouldBe` [72,76,67]
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversionFromRootPosition $ rootPosition Major (MidiNum 60))) `shouldBe` [72,76,67]
             it "Minor" $ do
-                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Minor (MidiNum 60))) `shouldBe` [72,75,67] 
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversionFromRootPosition $ rootPosition Minor (MidiNum 60))) `shouldBe` [72,75,67] 
             it "Diminished" $ do
-                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Diminished (MidiNum 60))) `shouldBe` [72,75,66]
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversionFromRootPosition $ rootPosition Diminished (MidiNum 60))) `shouldBe` [72,75,66]
             it "Augmented" $ do
-                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversion $ firstInversion $ rootPosition Augmented (MidiNum 60))) `shouldBe` [72,76,68]     
+                (map toInt $ notesFromTriad $ TriadSecondInversion (secondInversionFromRootPosition $ rootPosition Augmented (MidiNum 60))) `shouldBe` [72,76,68]     
         describe "arpeggiate" $ do    
             describe "RootPosition" $ do    
                 it "Up" $ do   
@@ -148,9 +148,9 @@ main = hspec $ do
                     (map toInt $ arpeggiate Down $ TriadFirstInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [72,67,64] 
             describe "SecondInversion" $ do    
                 it "Up" $ do   
-                    (map toInt $ arpeggiate Up $ TriadSecondInversion $ secondInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [67,72,76] 
+                    (map toInt $ arpeggiate Up $ TriadSecondInversion $ secondInversionFromRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [67,72,76] 
                 it "Down" $ do   
-                    (map toInt $ arpeggiate Down $ TriadSecondInversion $ secondInversion $ firstInversion $ rootPosition Major $ MidiNum 60) `shouldBe` [76,72,67] 
+                    (map toInt $ arpeggiate Down $ TriadSecondInversion $ secondInversionFromRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` [76,72,67] 
         describe "arpeggiateRun" $ do 
             describe "Major" $ do
                 it "21 Up, piano bounded" $ do
