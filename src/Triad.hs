@@ -21,7 +21,7 @@ module Triad
 -- https://www.musictheoryacademy.com/understanding-music/triads/
 -- https://www.musictheoryacademy.com/understanding-music/chord-inversions/
 
-import Data.Range.Range ( Range, inRange )
+import SpannedRange ( SpannedRange(..), inRange )
 
 import MidiNum ( MidiNum(..), shiftByOctave, shiftBySemitone )
 import Lib ( Direction(..) )
@@ -130,7 +130,7 @@ arpeggiateDown triad =
     reverse $ arpeggiateUp triad
 
 
-arpeggiateRun :: Range MidiNum -> Tone -> Direction -> MidiNum -> [MidiNum]
+arpeggiateRun :: SpannedRange MidiNum -> Tone -> Direction -> MidiNum -> [MidiNum]
 arpeggiateRun range tone direction start = 
     let
         rootPos = rootPosition tone start
@@ -146,7 +146,7 @@ arpeggiateRun range tone direction start =
             []
 
 
-arpeggiateRecurse :: Range MidiNum -> Direction -> Triad -> [MidiNum]
+arpeggiateRecurse :: SpannedRange MidiNum -> Direction -> Triad -> [MidiNum]
 arpeggiateRecurse range direction triad =
     let
         midiNums = arpeggiate direction triad

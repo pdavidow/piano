@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: aed24e1beab5722b14f2c74b0bb9d1e9dda435e3759ed5d15f85e664058af40b
+-- hash: b3a92dc63eb6cf5490d4570de79af3dcc71ede9eaed423f4e2da66e9548343d0
 
 name:           piano
 version:        0.1.0.0
@@ -40,6 +40,7 @@ library
       MidiNum
       MusicNote
       PianoNotes
+      SpannedRange
       Triad
   other-modules:
       Paths_piano

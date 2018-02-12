@@ -1,5 +1,3 @@
-{-# LANGUAGE InstanceSigs #-}
-
 module InstrumentMidiNum 
     ( InstrumentMidiNum -- hiding constructor
     , InstrumentMidiNum_Invalid(..)
@@ -10,10 +8,9 @@ module InstrumentMidiNum
     ) 
     where
 
-import Data.Range.Range ( Range(..), inRange )
-
 import MidiNum ( MidiNum(..), basicShow )
 import Instrument ( Instrument, midiNumRange )
+import SpannedRange ( SpannedRange(..), inRange )
 
 
 newtype InstrumentMidiNum = InstrumentMidiNum MidiNum deriving (Eq, Ord, Show)
@@ -25,14 +22,16 @@ data InstrumentMidiNum_Invalid
     deriving (Eq, Show)
 
 
-type EitherIMN = Either InstrumentMidiNum_Invalid InstrumentMidiNum
+type EitherIMN = Either 
+    InstrumentMidiNum_Invalid 
+    InstrumentMidiNum
 
 
 make :: Instrument -> MidiNum -> EitherIMN
 make instrument midiNum = 
     let
         range = midiNumRange instrument
-        (SpanRange start end) = range -- https://elmlang.slack.com/archives/C1UGSUNCX/p1518399834000081
+        (SpannedRange start end) = range
         errorString = show midiNum ++ " not in " ++ (show instrument) ++ " range [" ++ MidiNum.basicShow start ++ " .. " ++ MidiNum.basicShow end ++ "]" 
     in
         if inRange range midiNum then

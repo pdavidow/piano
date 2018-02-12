@@ -1,6 +1,5 @@
 import Test.Hspec
 import Data.Either ( isRight, isLeft, fromRight, fromLeft, partitionEithers  )
-import Data.Range.Range ( Range(..) )
 
 import MusicNote ( MusicNote(..) )
 import PianoNotes ( nameFor, freqFor )
