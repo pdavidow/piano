@@ -10,11 +10,11 @@ import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import Instrument ( Instrument(..), midiNumRange )
 import InstrumentNoteTriad ( InstrumentNoteTriad(..), fromTriad ) 
-
+import TextPhrase ( TextPhrase(..),  Decoration(..), Style(..), make, elagantize, emphasize )
 
 harp60 :: InstrumentMidiNum
 harp60 = 
-    head rights where (lefts, rights) = partitionEithers [make Harp $ MidiNum 60]
+    head rights where (lefts, rights) = partitionEithers [InstrumentMidiNum.make Harp $ MidiNum 60]
 
 
 main :: IO ()
@@ -78,11 +78,11 @@ main = hspec $ do
     describe "InstrumentMidiNum" $ do
         describe "make" $ do
             it "Piano valid: MidiNum 21" $ do
-                isRight (make Piano $ MidiNum 21) `shouldBe` True
+                isRight (InstrumentMidiNum.make Piano $ MidiNum 21) `shouldBe` True
             it "Piano invalid: MidiNum 20" $ do
-                isLeft (make Piano $ MidiNum 20) `shouldBe` True   
+                isLeft (InstrumentMidiNum.make Piano $ MidiNum 20) `shouldBe` True   
             it "Marimba error message" $ do
-                fromLeft (BelowRange "uhoh") (make Marimba $ MidiNum 44) `shouldBe` BelowRange "MidiNum 44 not in Marimba range [45 .. 96]"     
+                fromLeft (BelowRange "uhoh") (InstrumentMidiNum.make Marimba $ MidiNum 44) `shouldBe` BelowRange "MidiNum 44 not in Marimba range [45 .. 96]"     
         describe "basicShow" $ do
             it "shows only Int" $ do
                 InstrumentMidiNum.basicShow harp60 `shouldBe` "60"                              
@@ -234,3 +234,23 @@ main = hspec $ do
                     (show $ fromTriad Piano $ TriadRootPosition $ rootPosition Major $ MidiNum 10) `shouldBe` "<-- -- -->"
                 it "totally AboveRange Xylophone" $ do
                     (show $ fromTriad Xylophone $ TriadRootPosition $ rootPosition Major $ MidiNum 110) `shouldBe` "<++ ++ ++>"
+
+    describe "TextPhrase" $ do  
+        describe "make" $ do
+            it "make" $ do
+                (show $ TextPhrase.make "abc") `shouldBe` "\"abc\" []"
+        describe "instance Elagantized" $ do    
+            it "True" $ do
+                (show $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Italic]"
+            it "False" $ do
+                (show $ TextPhrase.elagantize False $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` (show $ TextPhrase.make "abc")                
+        describe "instance Emphasized" $ do    
+            it "True" $ do
+                (show $ TextPhrase.emphasize True (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Bold]"
+            it "False" $ do
+                (show $ TextPhrase.emphasize False $ TextPhrase.emphasize True (TextPhrase.make "abc")) `shouldBe` (show $ TextPhrase.make "abc")
+        describe "instance Elagantized, Emphasized" $ do    
+            it "elagantize, emphasize: True" $ do
+                (show $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Bold,Italic]"
+            it "elagantize: False, emphasize: True" $ do
+                (show $ TextPhrase.elagantize False $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Bold]"

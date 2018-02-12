@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b3a92dc63eb6cf5490d4570de79af3dcc71ede9eaed423f4e2da66e9548343d0
+-- hash: 230fa711570875a731f249ff7c05ee53bb04d9053ca28da487fd7ec019af376e
 
 name:           piano
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , range
   exposed-modules:
@@ -41,6 +42,7 @@ library
       MusicNote
       PianoNotes
       SpannedRange
+      TextPhrase
       Triad
   other-modules:
       Paths_piano
@@ -53,6 +55,7 @@ executable piano-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , piano
     , range
@@ -68,6 +71,7 @@ test-suite piano-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , hspec
     , piano
     , range
