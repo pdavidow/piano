@@ -22,6 +22,7 @@ module Triad
 -- https://www.musictheoryacademy.com/understanding-music/chord-inversions/
 
 import Data.Range.Range ( Range, inRange )
+
 import MidiNum ( MidiNum(..), shiftByOctave, shiftBySemitone )
 import Lib ( Direction(..) )
 
@@ -104,6 +105,7 @@ secondInversion (FirstInversion tone (Notes n1 n3 n5)) =
 secondInversionFromRootPosition :: RootPosition -> SecondInversion
 secondInversionFromRootPosition rootPosition =
     (secondInversion . firstInversion) rootPosition
+
 
 arpeggiate :: Direction -> Triad -> [MidiNum]
 arpeggiate direction triad =

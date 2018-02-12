@@ -12,7 +12,6 @@ module MidiNum
 import Lib ( octaveSemitoneCount ) 
 
 
--- Treated as boundless
 newtype MidiNum = MidiNum Int deriving (Enum, Eq, Ord, Show)
 
 

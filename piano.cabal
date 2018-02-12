@@ -2,12 +2,13 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8bc890ea5da2bd0de970a7f949e32f862fb4fcb6b174958bcbfaa97eb8d94a58
+-- hash: aed24e1beab5722b14f2c74b0bb9d1e9dda435e3759ed5d15f85e664058af40b
 
 name:           piano
 version:        0.1.0.0
 description:    Please see the README on Github at <https://github.com/githubuser/piano#readme>
-homepage:       https://github.com/pdavidow/piano
+homepage:       https://github.com/githubuser/piano#readme
+bug-reports:    https://github.com/githubuser/piano/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2018 Author name here
@@ -22,22 +23,24 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/pdavidow/piano
+  location: https://github.com/githubuser/piano
 
 library
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
-    , range 
+    , hspec
+    , range
   exposed-modules:
+      Instrument
+      InstrumentMidiNum
+      InstrumentNoteTriad
       Lib
       MidiNum
       MusicNote
       PianoNotes
-      PianoMidiNum
       Triad
-      PianoTriad
   other-modules:
       Paths_piano
   default-language: Haskell2010
@@ -49,16 +52,9 @@ executable piano-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , hspec
     , piano
-    , range 
-  exposed-modules:
-      Lib
-      MidiNum
-      MusicNote
-      PianoNotes    
-      PianoMidiNum
-      Triad
-      PianoTriad
+    , range
   other-modules:
       Paths_piano
   default-language: Haskell2010
@@ -71,9 +67,9 @@ test-suite piano-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , piano
     , hspec
-    , range 
+    , piano
+    , range
   other-modules:
       Paths_piano
   default-language: Haskell2010

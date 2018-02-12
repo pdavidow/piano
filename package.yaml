@@ -21,6 +21,8 @@ description:         Please see the README on Github at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- hspec
+- range
 
 library:
   source-dirs: src
@@ -39,7 +41,7 @@ executables:
 tests:
   piano-test:
     main:                Spec.hs
-    source-dirs:         test
+    source-dirs:         src/test
     ghc-options:
     - -threaded
     - -rtsopts

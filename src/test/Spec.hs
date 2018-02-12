@@ -1,15 +1,21 @@
 import Test.Hspec
-import Data.Either ( isRight, isLeft, fromRight, fromLeft )
-
+import Data.Either ( isRight, isLeft, fromRight, fromLeft, partitionEithers  )
 import Data.Range.Range ( Range(..) )
+
 import MusicNote ( MusicNote(..) )
-import PianoNotes ( minMidiNum, maxMidiNum, nameFor, freqFor )
+import PianoNotes ( nameFor, freqFor )
 import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, toInt, basicShow )
 import MusicNote ( Freq(..) )
-import PianoMidiNum ( PianoMidiNum, PianoMidiNum_Invalid(..), makePianoMidiNum, basicShow ) 
+import InstrumentMidiNum ( InstrumentMidiNum, InstrumentMidiNum_Invalid(..), make, basicShow ) 
 import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
-import PianoTriad  (PianoNotes(..), pianoNotesFromTriad ) 
+import Instrument ( Instrument(..), midiNumRange )
+import InstrumentNoteTriad ( InstrumentNoteTriad(..), fromTriad ) 
+
+
+harp60 :: InstrumentMidiNum
+harp60 = 
+    head rights where (lefts, rights) = partitionEithers [make Harp $ MidiNum 60]
 
 
 main :: IO ()
@@ -51,12 +57,6 @@ main = hspec $ do
                     compare (MusicNote (MidiNum 1) "a" (Freq 1.1)) (MusicNote (MidiNum 1) "b" (Freq 2.2))  `shouldBe` EQ             
     
     describe "PianoNotes" $ do
-        describe "minMidiNum" $ do
-            it "21" $ do
-                minMidiNum `shouldBe` (MidiNum 21)
-        describe "maxMidiNum" $ do
-            it "108" $ do
-                maxMidiNum `shouldBe` (MidiNum 108)
         describe "nameFor" $ do
             it "MidiNum 20 is Nothing" $ do
                 nameFor (MidiNum 20) `shouldBe` (Nothing :: Maybe String)
@@ -76,26 +76,17 @@ main = hspec $ do
             it "MidiNum 109 is Nothing" $ do
                 freqFor (MidiNum 109) `shouldBe` (Nothing :: Maybe Freq)
 
-    describe "PianoMidiNum" $ do
-        describe "instance Bounded" $ do 
-            describe "minBound" $ do 
-                it "at MidiNum 21" $ do  
-                    -- use non-matching default
-                    (minBound :: PianoMidiNum) == (fromRight (maxBound :: PianoMidiNum) (makePianoMidiNum (MidiNum 21))) `shouldBe` True
-            describe "maxBound" $ do 
-                it "at MidiNum 108" $ do  
-                    -- use non-matching default
-                    (maxBound :: PianoMidiNum) == (fromRight (minBound :: PianoMidiNum) (makePianoMidiNum (MidiNum 108))) `shouldBe` True
-        describe "makePianoMidiNum" $ do
-            it "valid: MidiNum 21" $ do
-                isRight (makePianoMidiNum (MidiNum 21)) `shouldBe` True
-            it "invalid: MidiNum 20" $ do
-                isLeft (makePianoMidiNum (MidiNum 20)) `shouldBe` True   
-            it "error for invalid" $ do
-                fromLeft (BelowRange "uhoh") (makePianoMidiNum (MidiNum 20)) `shouldBe` BelowRange "MidiNum 20 not in range [MidiNum 21 through MidiNum 108]"     
+    describe "InstrumentMidiNum" $ do
+        describe "make" $ do
+            it "Piano valid: MidiNum 21" $ do
+                isRight (make Piano $ MidiNum 21) `shouldBe` True
+            it "Piano invalid: MidiNum 20" $ do
+                isLeft (make Piano $ MidiNum 20) `shouldBe` True   
+            it "Marimba error message" $ do
+                fromLeft (BelowRange "uhoh") (make Marimba $ MidiNum 44) `shouldBe` BelowRange "MidiNum 44 not in Marimba range [45 .. 96]"     
         describe "basicShow" $ do
             it "shows only Int" $ do
-                PianoMidiNum.basicShow (fromRight (maxBound :: PianoMidiNum) (makePianoMidiNum (MidiNum 60))) `shouldBe` "60"                                   
+                InstrumentMidiNum.basicShow harp60 `shouldBe` "60"                              
     
     describe "Triad" $ do
         describe "shiftTriadBySemitone" $ do
@@ -154,92 +145,93 @@ main = hspec $ do
         describe "arpeggiateRun" $ do 
             describe "Major" $ do
                 it "21 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Up $ MidiNum 21) `shouldBe` [21,25,28,33,37,40,45,49,52,57,61,64,69,73,76,81,85,88,93,97,100,105]
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Up $ MidiNum 21) `shouldBe` [21,25,28,33,37,40,45,49,52,57,61,64,69,73,76,81,85,88,93,97,100,105]
                 it "20 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Up $ MidiNum 20) `shouldBe` []
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Up $ MidiNum 20) `shouldBe` []
                 it "104 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Up $ MidiNum 104) `shouldBe` [104,108]               
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Up $ MidiNum 104) `shouldBe` [104,108]               
                 it "109 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Up $ MidiNum 109) `shouldBe` []  
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Up $ MidiNum 109) `shouldBe` []  
                 it "108 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Down $ MidiNum 108) `shouldBe` [108,103,100,96,91,88,84,79,76,72,67,64,60,55,52,48,43,40,36,31,28,24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Down $ MidiNum 108) `shouldBe` [108,103,100,96,91,88,84,79,76,72,67,64,60,55,52,48,43,40,36,31,28,24] 
                 it "109 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Down $ MidiNum 109) `shouldBe` [] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Down $ MidiNum 109) `shouldBe` [] 
                 it "24 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Down $ MidiNum 24) `shouldBe` [24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Down $ MidiNum 24) `shouldBe` [24] 
                 it "21 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Down $ MidiNum 21) `shouldBe` [21] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Major Down $ MidiNum 21) `shouldBe` [21] 
                 it "20 Down, piano bounded" $ do
-                     (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Major Down $ MidiNum 20) `shouldBe` [] 
+                     (map toInt $ arpeggiateRun (midiNumRange Piano) Major Down $ MidiNum 20) `shouldBe` [] 
             describe "Minor" $ do
                 it "21 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Up $ MidiNum 21) `shouldBe` [21,24,28,33,36,40,45,48,52,57,60,64,69,72,76,81,84,88,93,96,100,105,108]
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Up $ MidiNum 21) `shouldBe` [21,24,28,33,36,40,45,48,52,57,60,64,69,72,76,81,84,88,93,96,100,105,108]
                 it "20 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Up $ MidiNum 20) `shouldBe` []
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Up $ MidiNum 20) `shouldBe` []
                 it "104 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Up $ MidiNum 104) `shouldBe` [104,107]               
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Up $ MidiNum 104) `shouldBe` [104,107]               
                 it "109 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Up $ MidiNum 109) `shouldBe` []  
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Up $ MidiNum 109) `shouldBe` []  
                 it "108 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Down $ MidiNum 108) `shouldBe` [108,103,99,96,91,87,84,79,75,72,67,63,60,55,51,48,43,39,36,31,27,24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Down $ MidiNum 108) `shouldBe` [108,103,99,96,91,87,84,79,75,72,67,63,60,55,51,48,43,39,36,31,27,24] 
                 it "109 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Down $ MidiNum 109) `shouldBe` [] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Down $ MidiNum 109) `shouldBe` [] 
                 it "24 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Down $ MidiNum 24) `shouldBe` [24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Down $ MidiNum 24) `shouldBe` [24] 
                 it "21 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Down $ MidiNum 21) `shouldBe` [21] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Down $ MidiNum 21) `shouldBe` [21] 
                 it "20 Down, piano bounded" $ do
-                        (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Minor Down $ MidiNum 20) `shouldBe` [] 
+                        (map toInt $ arpeggiateRun (midiNumRange Piano) Minor Down $ MidiNum 20) `shouldBe` [] 
             describe "Diminished" $ do
                 it "21 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Up $ MidiNum 21) `shouldBe` [21,24,27,33,36,39,45,48,51,57,60,63,69,72,75,81,84,87,93,96,99,105,108]
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Up $ MidiNum 21) `shouldBe` [21,24,27,33,36,39,45,48,51,57,60,63,69,72,75,81,84,87,93,96,99,105,108]
                 it "20 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Up $ MidiNum 20) `shouldBe` []
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Up $ MidiNum 20) `shouldBe` []
                 it "104 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Up $ MidiNum 104) `shouldBe` [104,107]               
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Up $ MidiNum 104) `shouldBe` [104,107]               
                 it "109 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Up $ MidiNum 109) `shouldBe` []  
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Up $ MidiNum 109) `shouldBe` []  
                 it "108 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Down $ MidiNum 108) `shouldBe` [108,102,99,96,90,87,84,78,75,72,66,63,60,54,51,48,42,39,36,30,27,24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Down $ MidiNum 108) `shouldBe` [108,102,99,96,90,87,84,78,75,72,66,63,60,54,51,48,42,39,36,30,27,24] 
                 it "109 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Down $ MidiNum 109) `shouldBe` [] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Down $ MidiNum 109) `shouldBe` [] 
                 it "24 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Down $ MidiNum 24) `shouldBe` [24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Down $ MidiNum 24) `shouldBe` [24] 
                 it "21 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Down $ MidiNum 21) `shouldBe` [21] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Down $ MidiNum 21) `shouldBe` [21] 
                 it "20 Down, piano bounded" $ do
-                        (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Diminished Down $ MidiNum 20) `shouldBe` [] 
+                        (map toInt $ arpeggiateRun (midiNumRange Piano) Diminished Down $ MidiNum 20) `shouldBe` [] 
             describe "Augmented" $ do
                 it "21 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Up $ MidiNum 21) `shouldBe` [21,25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97,101,105]
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Up $ MidiNum 21) `shouldBe` [21,25,29,33,37,41,45,49,53,57,61,65,69,73,77,81,85,89,93,97,101,105]
                 it "20 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Up $ MidiNum 20) `shouldBe` []
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Up $ MidiNum 20) `shouldBe` []
                 it "104 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Up $ MidiNum 104) `shouldBe` [104,108]               
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Up $ MidiNum 104) `shouldBe` [104,108]               
                 it "109 Up, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Up $ MidiNum 109) `shouldBe` []  
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Up $ MidiNum 109) `shouldBe` []  
                 it "108 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Down $ MidiNum 108) `shouldBe` [108,104,100,96,92,88,84,80,76,72,68,64,60,56,52,48,44,40,36,32,28,24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Down $ MidiNum 108) `shouldBe` [108,104,100,96,92,88,84,80,76,72,68,64,60,56,52,48,44,40,36,32,28,24] 
                 it "109 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Down $ MidiNum 109) `shouldBe` [] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Down $ MidiNum 109) `shouldBe` [] 
                 it "24 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Down $ MidiNum 24) `shouldBe` [24] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Down $ MidiNum 24) `shouldBe` [24] 
                 it "21 Down, piano bounded" $ do
-                    (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Down $ MidiNum 21) `shouldBe` [21] 
+                    (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Down $ MidiNum 21) `shouldBe` [21] 
                 it "20 Down, piano bounded" $ do
-                        (map toInt $ arpeggiateRun (SpanRange minMidiNum maxMidiNum) Augmented Down $ MidiNum 20) `shouldBe` [] 
+                        (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Down $ MidiNum 20) `shouldBe` [] 
 
-
-    describe "PianoNotes" $ do     
+    describe "InstrumentNoteTriad" $ do     
         describe "instance Show" $ do      
             describe "show" $ do    
-                it "valid" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` "<60 64 67>"
-                it "partially BelowRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 20) `shouldBe` "<-- 24 27>"
-                it "partially AboveRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 104) `shouldBe` "<104 108 ++>"
-                it "totally BelowRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 10) `shouldBe` "<-- -- -->"
-                it "totally AboveRange" $ do
-                    (show $ pianoNotesFromTriad $ TriadRootPosition $ rootPosition Major $ MidiNum 110) `shouldBe` "<++ ++ ++>"
+                it "valid Piano" $ do
+                    (show $ fromTriad Piano $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` "<60 64 67>"
+                it "partially BelowRange Piano" $ do
+                    (show $ fromTriad Piano $ TriadRootPosition $ rootPosition Minor $ MidiNum 20) `shouldBe` "<-- 23 27>"
+                it "partially BelowRange Harp" $ do
+                    (show $ fromTriad Harp $ TriadRootPosition $ rootPosition Minor $ MidiNum 20) `shouldBe` "<-- -- 27>"                    
+                it "partially AboveRange Xylophone" $ do
+                    (show $ fromTriad Xylophone $ TriadRootPosition $ rootPosition Major $ MidiNum 104) `shouldBe` "<104 108 ++>"
+                it "totally BelowRange Piano" $ do
+                    (show $ fromTriad Piano $ TriadRootPosition $ rootPosition Major $ MidiNum 10) `shouldBe` "<-- -- -->"
+                it "totally AboveRange Xylophone" $ do
+                    (show $ fromTriad Xylophone $ TriadRootPosition $ rootPosition Major $ MidiNum 110) `shouldBe` "<++ ++ ++>"
