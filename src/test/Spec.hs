@@ -10,7 +10,7 @@ import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import Instrument ( Instrument(..), midiNumRange )
 import InstrumentNoteTriad ( InstrumentNoteTriad(..), fromTriad ) 
-import TextPhrase ( TextPhrase(..),  Decoration(..), Style(..), make, elagantize, emphasize )
+import TextPhrase ( TextPhrase(..),  Decoration(..), Style(..), make, styles, elagantize, emphasize )
 
 harp60 :: InstrumentMidiNum
 harp60 = 
@@ -242,15 +242,19 @@ main = hspec $ do
         describe "instance Elagantized" $ do    
             it "True" $ do
                 (show $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Italic]"
+            it "again doesn't change anything" $ do
+                (show $ TextPhrase.elagantize True $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Italic]"
             it "False" $ do
-                (show $ TextPhrase.elagantize False $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` (show $ TextPhrase.make "abc")                
+                (show $ TextPhrase.elagantize False $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` (show $ TextPhrase.make "abc")        
+            it "again doesn't change anything" $ do
+                (show $ TextPhrase.elagantize False $ TextPhrase.elagantize False $ TextPhrase.elagantize True (TextPhrase.make "abc")) `shouldBe` (show $ TextPhrase.make "abc")           
         describe "instance Emphasized" $ do    
             it "True" $ do
-                (show $ TextPhrase.emphasize True (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Bold]"
+                (styles $ TextPhrase.emphasize True (TextPhrase.make "abc")) `shouldBe` [Bold]
             it "False" $ do
-                (show $ TextPhrase.emphasize False $ TextPhrase.emphasize True (TextPhrase.make "abc")) `shouldBe` (show $ TextPhrase.make "abc")
+                (styles $ TextPhrase.emphasize False $ TextPhrase.emphasize True (TextPhrase.make "abc")) `shouldBe` []
         describe "instance Elagantized, Emphasized" $ do    
             it "elagantize, emphasize: True" $ do
-                (show $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Bold,Italic]"
+                (styles $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` [Bold, Italic]
             it "elagantize: False, emphasize: True" $ do
-                (show $ TextPhrase.elagantize False $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` "\"abc\" [Bold]"
+                (styles $ TextPhrase.elagantize False $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` [Bold]

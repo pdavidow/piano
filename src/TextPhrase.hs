@@ -1,8 +1,15 @@
 module TextPhrase
-    ( TextPhrase(..),  Decoration(..), Style(..), make, elagantize, emphasize )
+    ( TextPhrase(..)
+    , Decoration(..)
+    , Style(..)
+    , make
+    , styles
+    , elagantize
+    , emphasize
+    )
     where
 
-import Data.Set as Set (Set(..), empty, insert, delete, toList )
+import Data.Set as Set (Set, empty, insert, delete, toList )
 import Lib ( Emphasized, Elagantized, emphasize, elagantize )
 
 
@@ -28,6 +35,10 @@ instance Show TextPhrase where
 make :: String -> TextPhrase
 make s =
     TextPhrase (Decoration Set.empty) s
+
+
+styles :: TextPhrase -> [Style]
+styles (TextPhrase (Decoration xs) _) = toList xs
 
 
 adjustStyle :: Style -> Bool -> TextPhrase -> TextPhrase
