@@ -20,7 +20,9 @@ newtype DrivingSpeed = DrivingSpeed Speed deriving (Eq, Ord, Show)
 
 toSafeness :: DrivingSpeed -> Safeness Speed
 toSafeness (DrivingSpeed x) =
-    if x <= 0 then -- todo really want postive only
+    if x < 0 then 
+        Unsafe x
+    else if x == 0 then 
         VerySafe x
     else if x <= speedLimit then
         Safe x
@@ -31,7 +33,7 @@ toSafeness (DrivingSpeed x) =
 driverFeedback :: DrivingSpeed -> TextPhrase
 driverFeedback x =
     let
-        safeness = fmap show $ toSafeness x
+        safeness = show <$> toSafeness x
     in
         case safeness of
             (Unsafe s) -> emphasize True $ TextPhrase.make s
