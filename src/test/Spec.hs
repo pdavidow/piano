@@ -12,8 +12,10 @@ import Instrument ( Instrument(..), midiNumRange )
 import InstrumentTriadNotes ( InstrumentTriadNotes(..), fromTriad ) 
 import TextPhrase ( TextPhrase(..),  Style(..), make, styles, elagantize, emphasize )
 import MusicPhrase ( MusicPhrase(..), Style(..), style, elagantize, emphasize)
+import Safeness ( Safeness(..), fmap )
+import DrivingSpeed ( DrivingSpeed(..), driverFeedback )
 
-  
+
 harp60 :: InstrumentMidiNum
 harp60 = 
     head rights where (lefts, rights) = partitionEithers [InstrumentMidiNum.make Harp $ MidiNum 60]
@@ -271,4 +273,12 @@ main = hspec $ do
             it "Piano emphasize True" $ do
                 (style $ MusicPhrase.emphasize True $ MusicPhrase Piano None $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` ChordedOctave
             it "Trombone emphasize True" $ do
-                (style $ MusicPhrase.emphasize True $ MusicPhrase Trombone Chord $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` Arpeggio                
+                (style $ MusicPhrase.emphasize True $ MusicPhrase Trombone Chord $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` Arpeggio   
+                
+    describe "DrivingSpeed" $ do
+        it "Unsafe" $ do
+            (show $ driverFeedback $ DrivingSpeed 90) `shouldBe` "\"90\" [Bold]"
+        it "Safe" $ do
+            (show $ driverFeedback $ DrivingSpeed 50) `shouldBe` "\"50\" []"
+        it "VerySafe" $ do
+            (show $ driverFeedback $ DrivingSpeed 0) `shouldBe` "\"0\" [Italic]"            

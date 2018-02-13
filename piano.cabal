@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b42024ebd8ee2cb28103948aff0f995b0376266ae2c5363ac15e50e638806015
+-- hash: c8db95a4834972cd47c6f518e880ca3db43d4d9e200f66bb1331cbac1d03656d
 
 name:           piano
 version:        0.1.0.0
@@ -34,6 +34,7 @@ library
     , hspec
     , range
   exposed-modules:
+      DrivingSpeed
       Instrument
       InstrumentMidiNum
       InstrumentTriadNotes
@@ -42,6 +43,7 @@ library
       MusicNote
       MusicPhrase
       PianoNotes
+      Safeness
       SpannedRange
       TextPhrase
       Triad
