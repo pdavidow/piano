@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e02c0e8d6159d9aef5b76e30cfb5ec7680c33f3615abced02eb56b117988ebd0
+-- hash: b42024ebd8ee2cb28103948aff0f995b0376266ae2c5363ac15e50e638806015
 
 name:           piano
 version:        0.1.0.0
@@ -40,6 +40,7 @@ library
       Lib
       MidiNum
       MusicNote
+      MusicPhrase
       PianoNotes
       SpannedRange
       TextPhrase

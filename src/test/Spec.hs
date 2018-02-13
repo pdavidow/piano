@@ -11,7 +11,9 @@ import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion
 import Instrument ( Instrument(..), midiNumRange )
 import InstrumentTriadNotes ( InstrumentTriadNotes(..), fromTriad ) 
 import TextPhrase ( TextPhrase(..),  Style(..), make, styles, elagantize, emphasize )
- 
+import MusicPhrase ( MusicPhrase(..), Style(..), style, elagantize, emphasize)
+
+  
 harp60 :: InstrumentMidiNum
 harp60 = 
     head rights where (lefts, rights) = partitionEithers [InstrumentMidiNum.make Harp $ MidiNum 60]
@@ -258,3 +260,15 @@ main = hspec $ do
                 (styles $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` [Bold, Italic]
             it "elagantize: False, emphasize: True" $ do
                 (styles $ TextPhrase.elagantize False $ TextPhrase.elagantize True $ TextPhrase.emphasize True $ (TextPhrase.make "abc")) `shouldBe` [Bold]
+
+    describe "MusicPhrase" $ do  
+        describe "instance Elagantized" $ do     
+            it "Piano elagantize True" $ do
+                (style $ MusicPhrase.elagantize True $ MusicPhrase Piano None $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` ArpeggiatedRun
+            it "Piano elagantize False" $ do
+                (style $ MusicPhrase.elagantize False $ MusicPhrase Piano Chord $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` None
+        describe "instance Emphasized" $ do     
+            it "Piano emphasize True" $ do
+                (style $ MusicPhrase.emphasize True $ MusicPhrase Piano None $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` ChordedOctave
+            it "Trombone emphasize True" $ do
+                (style $ MusicPhrase.emphasize True $ MusicPhrase Trombone Chord $ TriadRootPosition $ rootPosition Major $ MidiNum 60) `shouldBe` Arpeggio                

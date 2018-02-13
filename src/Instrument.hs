@@ -1,5 +1,5 @@
 module Instrument
-    ( Instrument(..), midiNumRange )
+    ( Instrument(..), midiNumRange, isMonophonic, isPolyphonic )
     where
 
 -- https://soundprogramming.net/file-formats/midi-note-ranges-of-orchestral-instruments/

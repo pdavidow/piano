@@ -46,11 +46,11 @@ adjustStyle x flag (TextPhrase xs string) =
         TextPhrase xs' string
 
 
-instance Emphasized TextPhrase where
-    emphasize flag x = 
-        adjustStyle Bold flag x
-
-
 instance Elagantized TextPhrase where
     elagantize flag x = 
         adjustStyle Italic flag x
+
+
+instance Emphasized TextPhrase where
+    emphasize flag x = 
+        adjustStyle Bold flag x
