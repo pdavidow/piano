@@ -9,9 +9,9 @@ import InstrumentMidiNum ( InstrumentMidiNum, InstrumentMidiNum_Invalid(..), mak
 import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import Instrument ( Instrument(..), midiNumRange )
-import InstrumentNoteTriad ( InstrumentNoteTriad(..), fromTriad ) 
+import InstrumentTriadNotes ( InstrumentTriadNotes(..), fromTriad ) 
 import TextPhrase ( TextPhrase(..),  Decoration(..), Style(..), make, styles, elagantize, emphasize )
-
+ 
 harp60 :: InstrumentMidiNum
 harp60 = 
     head rights where (lefts, rights) = partitionEithers [InstrumentMidiNum.make Harp $ MidiNum 60]
@@ -219,7 +219,7 @@ main = hspec $ do
                 it "20 Down, piano bounded" $ do
                         (map toInt $ arpeggiateRun (midiNumRange Piano) Augmented Down $ MidiNum 20) `shouldBe` [] 
 
-    describe "InstrumentNoteTriad" $ do     
+    describe "InstrumentTriadNotes" $ do     
         describe "instance Show" $ do      
             describe "show" $ do    
                 it "valid Piano" $ do

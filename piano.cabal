@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 230fa711570875a731f249ff7c05ee53bb04d9053ca28da487fd7ec019af376e
+-- hash: e02c0e8d6159d9aef5b76e30cfb5ec7680c33f3615abced02eb56b117988ebd0
 
 name:           piano
 version:        0.1.0.0
@@ -36,7 +36,7 @@ library
   exposed-modules:
       Instrument
       InstrumentMidiNum
-      InstrumentNoteTriad
+      InstrumentTriadNotes
       Lib
       MidiNum
       MusicNote

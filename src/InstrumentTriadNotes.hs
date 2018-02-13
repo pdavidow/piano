@@ -1,5 +1,5 @@
-module InstrumentNoteTriad 
-    ( InstrumentNoteTriad(..)
+module InstrumentTriadNotes 
+    ( InstrumentTriadNotes(..)
     , fromTriad
     )
     where
@@ -9,15 +9,15 @@ import Instrument ( Instrument )
 import InstrumentMidiNum ( InstrumentMidiNum, InstrumentMidiNum_Invalid(..), EitherIMN, make, basicShow )
 
 
-data InstrumentNoteTriad = InstrumentNoteTriad
+data InstrumentTriadNotes = InstrumentTriadNotes
     { root :: EitherIMN
     , third :: EitherIMN
     , fifth :: EitherIMN
     } deriving (Eq)    
+ 
 
-
-instance Show InstrumentNoteTriad where
-    show (InstrumentNoteTriad n1 n2 n3) = 
+instance Show InstrumentTriadNotes where
+    show (InstrumentTriadNotes n1 n2 n3) = 
         let
             depict = \ invalid -> 
                 case invalid of
@@ -29,7 +29,7 @@ instance Show InstrumentNoteTriad where
             "<" ++ fn n1 ++ " " ++ fn n2 ++ " " ++ fn n3 ++ ">"
 
 
-fromTriad :: Instrument -> Triad -> InstrumentNoteTriad
+fromTriad :: Instrument -> Triad -> InstrumentTriadNotes
 fromTriad instrument triad =
-    InstrumentNoteTriad n1 n2 n3 
+    InstrumentTriadNotes n1 n2 n3 
         where [n1, n2, n3] = map (make instrument) $ notesFromTriad triad
