@@ -10,7 +10,7 @@ import Lib ( Direction(..) )
 import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import Instrument ( Instrument(..), midiNumRange )
 import InstrumentTriadNotes ( InstrumentTriadNotes(..), fromTriad ) 
-import TextPhrase ( TextPhrase(..),  Decoration(..), Style(..), make, styles, elagantize, emphasize )
+import TextPhrase ( TextPhrase(..),  Style(..), make, styles, elagantize, emphasize )
  
 harp60 :: InstrumentMidiNum
 harp60 = 
