@@ -12,10 +12,13 @@ import Instrument ( Instrument(..), midiNumRange )
 import InstrumentTriadNotes ( InstrumentTriadNotes(..), fromTriad ) 
 import TextPhrase ( TextPhrase(..),  Style(..), make, styles, elagantize, emphasize )
 import MusicPhrase ( MusicPhrase(..), Style(..), style, elagantize, emphasize)
-import Safeness ( Safeness(..), fmap )
+import Safeness ( Safeness(..) )
 import DrivingSpeed ( DrivingSpeed(..), driverFeedback )
 import DrivingWeather ( DrivingWeather(..) )
 import DrivingTrip ( isGoodTrip )
+import Crypto ( actualSafeness )
+import CryptoDedicatedStorage ( CryptoDedicatedStorage(..) )
+import CryptoCurrency ( CryptoCurrency(..) )
 
 
 harp60 :: InstrumentMidiNum
@@ -295,4 +298,29 @@ main = hspec $ do
         it "LightRain 55" $ do
             (isGoodTrip LightRain $ DrivingSpeed 55) `shouldBe` True  
         it "Hail 100" $ do
-            (isGoodTrip Hail $ DrivingSpeed 100) `shouldBe` False                                                               
+            (isGoodTrip Hail $ DrivingSpeed 100) `shouldBe` False    
+            
+    describe "Crypto" $ do 
+        it "HardwareWallet SuperCoin" $ do
+            (actualSafeness $ HardwareWallet SuperCoin) `shouldBe` VerySafe SuperCoin
+        it "HardwareWallet OkayCoin" $ do
+            (actualSafeness $ HardwareWallet OkayCoin) `shouldBe` Safe OkayCoin
+        it "HardwareWallet UhohCoin" $ do
+            (actualSafeness $ HardwareWallet UhohCoin) `shouldBe` Unsafe UhohCoin    
+
+        it "OnlineWallet SuperCoin" $ do
+            (actualSafeness $ OnlineWallet SuperCoin) `shouldBe` Safe SuperCoin
+        it "OnlineWallet OkayCoin" $ do
+            (actualSafeness $ OnlineWallet OkayCoin) `shouldBe` Safe OkayCoin
+        it "OnlineWallet UhohCoin" $ do
+            (actualSafeness $ OnlineWallet UhohCoin) `shouldBe` Unsafe UhohCoin
+
+        it "Exchange SuperCoin" $ do
+            (actualSafeness $ Exchange SuperCoin) `shouldBe` Unsafe SuperCoin
+        it "Exchange OkayCoin" $ do
+            (actualSafeness $ Exchange OkayCoin) `shouldBe` Unsafe OkayCoin 
+        it "Exchange UhohCoin" $ do
+            (actualSafeness $ Exchange UhohCoin) `shouldBe` Unsafe UhohCoin            
+ 
+    
+                            

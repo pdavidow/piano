@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 894ad0962fc7646a97e956e650a00b99a485922e551ad9ec5ab748f023c24d7f
+-- hash: e11004b87975b810266d9729515c3e6d362f5a8dc651848f6a7d4233973a3a7b
 
 name:           piano
 version:        0.1.0.0
@@ -34,6 +34,9 @@ library
     , hspec
     , range
   exposed-modules:
+      Crypto
+      CryptoCurrency
+      CryptoDedicatedStorage
       DrivingSpeed
       DrivingTrip
       DrivingWeather
