@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c8db95a4834972cd47c6f518e880ca3db43d4d9e200f66bb1331cbac1d03656d
+-- hash: 894ad0962fc7646a97e956e650a00b99a485922e551ad9ec5ab748f023c24d7f
 
 name:           piano
 version:        0.1.0.0
@@ -35,6 +35,8 @@ library
     , range
   exposed-modules:
       DrivingSpeed
+      DrivingTrip
+      DrivingWeather
       Instrument
       InstrumentMidiNum
       InstrumentTriadNotes

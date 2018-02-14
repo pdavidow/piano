@@ -14,6 +14,8 @@ import TextPhrase ( TextPhrase(..),  Style(..), make, styles, elagantize, emphas
 import MusicPhrase ( MusicPhrase(..), Style(..), style, elagantize, emphasize)
 import Safeness ( Safeness(..), fmap )
 import DrivingSpeed ( DrivingSpeed(..), driverFeedback )
+import DrivingWeather ( DrivingWeather(..) )
+import DrivingTrip ( isGoodTrip )
 
 
 harp60 :: InstrumentMidiNum
@@ -277,8 +279,20 @@ main = hspec $ do
                 
     describe "DrivingSpeed" $ do
         it "Unsafe" $ do
-            (show $ driverFeedback $ DrivingSpeed 90) `shouldBe` "\"90\" [Bold]"
+            (show $ driverFeedback $ DrivingSpeed 90) `shouldBe` "\"DrivingSpeed 90\" [Bold]"
         it "Safe" $ do
-            (show $ driverFeedback $ DrivingSpeed 50) `shouldBe` "\"50\" []"
+            (show $ driverFeedback $ DrivingSpeed 65) `shouldBe` "\"DrivingSpeed 65\" []"
         it "VerySafe" $ do
-            (show $ driverFeedback $ DrivingSpeed 0) `shouldBe` "\"0\" [Italic]"            
+            (show $ driverFeedback $ DrivingSpeed 50) `shouldBe` "\"DrivingSpeed 50\" [Italic]"    
+
+    describe "DrivingTrip" $ do
+        it "ClearSkies 50" $ do
+            (isGoodTrip ClearSkies $ DrivingSpeed 50) `shouldBe` True
+        it "ClearSkies 100" $ do
+            (isGoodTrip ClearSkies $ DrivingSpeed 100) `shouldBe` False    
+        it "HeavyRain 55" $ do
+            (isGoodTrip HeavyRain $ DrivingSpeed 50) `shouldBe` False   
+        it "LightRain 55" $ do
+            (isGoodTrip LightRain $ DrivingSpeed 55) `shouldBe` True  
+        it "Hail 100" $ do
+            (isGoodTrip Hail $ DrivingSpeed 100) `shouldBe` False                                                               

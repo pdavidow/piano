@@ -1,33 +1,34 @@
 module DrivingSpeed
     ( DrivingSpeed(..)
+    , toSafeness
+    , toSafeness'
     , driverFeedback
     )
     where
 
-import Safeness ( Safeness(..), fmap )
+import Safeness ( Safeness(..), fmap)
 import TextPhrase ( TextPhrase, make, elagantize, emphasize )
 
 
-type Speed = Int
+newtype DrivingSpeed = DrivingSpeed Int deriving (Eq, Ord, Show) 
 
 
-speedLimit :: Speed
-speedLimit = 55
+toSafeness' :: DrivingSpeed -> a -> Safeness a
+toSafeness' (DrivingSpeed n) a =
+    let
+        fn = 
+            if n <= 55 then
+                VerySafe 
+            else if n <= 70 then
+                Safe 
+            else
+                Unsafe 
+    in
+        fn a
 
 
-newtype DrivingSpeed = DrivingSpeed Speed deriving (Eq, Ord, Show) 
-
-
-toSafeness :: DrivingSpeed -> Safeness Speed
-toSafeness (DrivingSpeed x) =
-    if x < 0 then 
-        Unsafe x
-    else if x == 0 then 
-        VerySafe x
-    else if x <= speedLimit then
-        Safe x
-    else
-        Unsafe x
+toSafeness :: DrivingSpeed -> Safeness DrivingSpeed
+toSafeness s = toSafeness' s s
 
 
 driverFeedback :: DrivingSpeed -> TextPhrase
