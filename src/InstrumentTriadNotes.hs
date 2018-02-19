@@ -9,11 +9,11 @@ import Instrument ( Instrument )
 import InstrumentMidiNum ( InstrumentMidiNum, InstrumentMidiNum_Invalid(..), EitherIMN, make, basicShow )
 
 
-data InstrumentTriadNotes = InstrumentTriadNotes
-    { root :: EitherIMN
-    , third :: EitherIMN
-    , fifth :: EitherIMN
-    } deriving (Eq)    
+data InstrumentTriadNotes = InstrumentTriadNotes 
+    EitherIMN 
+    EitherIMN 
+    EitherIMN
+        deriving (Eq)    
  
 
 instance Show InstrumentTriadNotes where

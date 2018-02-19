@@ -28,9 +28,9 @@ import Lib ( Direction(..) )
 
 
 data Notes = Notes
-    { root :: MidiNum
-    , third :: MidiNum
-    , fifth :: MidiNum
+    { notes_root :: MidiNum
+    , notes_third :: MidiNum
+    , notes_fifth :: MidiNum
     } deriving (Eq, Show)     
 
 
@@ -78,27 +78,27 @@ rootPosition tone root =
         (o3, o5) = rootPosOffsets tone
     in
         RootPosition tone $ Notes
-            { fifth = MidiNum $ n + o5 
-            , third = MidiNum $ n + o3
-            , root = root
+            { notes_fifth = MidiNum $ n + o5 
+            , notes_third = MidiNum $ n + o3
+            , notes_root = root
             }   
 
 
 firstInversion :: RootPosition -> FirstInversion
 firstInversion (RootPosition tone (Notes n1 n3 n5)) =
     FirstInversion tone $ Notes
-        { root = MidiNum.shiftByOctave 1 n1
-        , fifth = n5
-        , third = n3
+        { notes_root = MidiNum.shiftByOctave 1 n1
+        , notes_fifth = n5
+        , notes_third = n3
         }   
     
 
 secondInversion :: FirstInversion -> SecondInversion
 secondInversion (FirstInversion tone (Notes n1 n3 n5)) =
     SecondInversion tone $ Notes
-        { third = MidiNum.shiftByOctave 1 n3
-        , root = n1
-        , fifth = n5
+        { notes_third = MidiNum.shiftByOctave 1 n3
+        , notes_root = n1
+        , notes_fifth = n5
         }   
         
 

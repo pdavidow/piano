@@ -7,5 +7,5 @@ Some piano to be found in mix of music notes, driving, and crypto-currency.
 * **Monad** -- Safeness, Crypto
 * **Typeclass defined** -- Lib
 * **Recursion** -- Triad
-* **Hidden constructor** -- InstrumentMidiNum
+* **Hidden constructor** -- InstrumentMidiNum, Triad
 * **Pointfree style** -- Triad

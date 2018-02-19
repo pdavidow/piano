@@ -4,7 +4,7 @@ module SpannedRange
     )
     where
 
--- Motivation: Want to be able to safely do "(Data.Range.Range.SpanRange start end) = range" (see https://elmlang.slack.com/archives/C1UGSUNCX/p1518399834000081)
+-- Motivation: Safely perform "(Data.Range.Range.SpanRange start end) = range"
 
 import qualified Data.Range.Range as Range ( Range(..), inRange ) 
 

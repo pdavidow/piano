@@ -1,5 +1,8 @@
 module PianoNotes 
-    ( pianoNotesList, nameFor, freqFor )
+    ( pianoNotesList
+    , nameFor
+    , freqFor 
+    )
     where
 
 import Data.List ( find )
@@ -10,22 +13,22 @@ import MusicNote ( MusicNote(..), Freq(..) )
 
 musicNoteFor :: MidiNum -> Maybe MusicNote
 musicNoteFor midiNum =
-    find (\ musicNote -> midiNum_ musicNote == midiNum) pianoNotesList
+    find (\ musicNote -> note_midiNum musicNote == midiNum) pianoNotesList
 
 
-datumFor :: MidiNum -> (MusicNote -> a) -> Maybe a
-datumFor midiNum fn =
+datumFor :: (MusicNote -> a) -> MidiNum -> Maybe a
+datumFor fn midiNum =
     maybe Nothing (\ musicNote -> Just $ fn musicNote) $ musicNoteFor midiNum 
 
 
 nameFor :: MidiNum -> Maybe String
 nameFor midiNum =
-    datumFor midiNum name_
+    datumFor note_name midiNum 
 
 
 freqFor :: MidiNum -> Maybe Freq
 freqFor midiNum =
-    datumFor midiNum freq_
+    datumFor note_freq midiNum 
 
 
 pianoNotesList :: [MusicNote]

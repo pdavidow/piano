@@ -30,7 +30,9 @@ cap cappee fn =
         let
             capper = fn $ contents cappee
         in
-            case ( cappee,      capper ) of
+            case 
+                ( cappee,       capper ) of       
+                                 
                 ( _,            Unsafe _ )      -> capper
                 ( _,            VerySafe _ )    -> cappee
                 ( VerySafe _,   Safe _ )        -> capper
