@@ -44,6 +44,20 @@ isNotUnsafe x =
         _ -> True
 
 
+instance Ord Safeness where
+    compare :: Safeness a -> Safeness b -> Ordering
+    compare x y = 
+        case (x, y) of
+            (Unsafe _, Unsafe _) -> EQ
+            (Unsafe _, _) -> GT
+            (Safe _, Unsafe _) -> LT
+            (Safe _, Safe _) -> EQ
+            (VerySafe _, VerySafe _) -> EQ
+
+            (_, Unsafe _) -> GT
+            
+
+
 instance Functor Safeness where
     fmap :: (a -> b) -> Safeness a -> Safeness b
     fmap fn (Unsafe x)      = Unsafe $ fn x

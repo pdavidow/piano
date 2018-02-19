@@ -1,5 +1,7 @@
 module Crypto
-    ( actualSafeness )
+    ( actualSafeness
+    , storageRating 
+    )
     where
 
 import Safeness ( Safeness, (>>=) )

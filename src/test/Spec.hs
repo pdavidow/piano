@@ -1,6 +1,7 @@
 import Test.Hspec
+import Test.QuickCheck
 import Data.Either ( isRight, isLeft, fromRight, fromLeft, partitionEithers  )
-
+   
 import MusicNote ( MusicNote(..) )
 import PianoNotes ( nameFor, freqFor )
 import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, toInt, basicShow )
@@ -16,8 +17,8 @@ import Safeness ( Safeness(..) )
 import DrivingSpeed ( DrivingSpeed(..), driverFeedback )
 import DrivingWeather ( DrivingWeather(..) )
 import DrivingTrip ( isGoodTrip )
-import Crypto ( actualSafeness )
-import CryptoDedicatedStorage ( CryptoDedicatedStorage(..) )
+import Crypto ( actualSafeness, storageRating )
+import CryptoDedicatedStorage ( CryptoDedicatedStorage(..), toSafeness )
 import CryptoCurrency ( CryptoCurrency(..) )
 
 
@@ -320,7 +321,17 @@ main = hspec $ do
         it "Exchange OkayCoin" $ do
             (actualSafeness $ Exchange OkayCoin) `shouldBe` Unsafe OkayCoin 
         it "Exchange UhohCoin" $ do
-            (actualSafeness $ Exchange UhohCoin) `shouldBe` Unsafe UhohCoin            
+            (actualSafeness $ Exchange UhohCoin) `shouldBe` Unsafe UhohCoin      
+            
+    describe "QuickCheck" $ do
+        it "x + 1 is always greater than x" $ do
+            property $ \x -> x + 1 >= (x :: Int)
+        it "Safeness >>= for CryptoCurrency"
+            property $ \x -> 
+                let
+                    storageSafeness = CryptoDedicatedStorage.toSafeness x
+                in
+                    (storageSafeness >>= storageRating) <= storageSafeness (x :: CryptoDedicatedStorage)
  
     
                             

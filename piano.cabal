@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e11004b87975b810266d9729515c3e6d362f5a8dc651848f6a7d4233973a3a7b
+-- hash: 746a500f982bc860c28f654f4b227a781e8f72c47e5f1c4bc5fa25ee7fea8165
 
 name:           piano
 version:        0.1.0.0
@@ -29,7 +29,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , containers
     , hspec
     , range
@@ -62,7 +63,8 @@ executable piano-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , containers
     , hspec
     , piano
@@ -78,7 +80,8 @@ test-suite piano-test
       src/test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , containers
     , hspec
     , piano

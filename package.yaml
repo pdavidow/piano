@@ -24,6 +24,7 @@ dependencies:
 - hspec
 - range
 - containers
+- QuickCheck
 
 library:
   source-dirs: src
