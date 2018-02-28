@@ -17,6 +17,8 @@ data MusicPhrase = MusicPhrase Instrument Style Triad deriving (Eq, Show)
 data Style 
     = None
     | Octave
+    | OctaveRocking
+    | OctaveRocking_3_1
     | Chord
     | ChordedOctave
     | Arpeggio
@@ -29,7 +31,7 @@ style (MusicPhrase _ s _) = s
 
 
 adjustStyle :: Style -> Bool -> MusicPhrase -> MusicPhrase
-adjustStyle newStyle flag (MusicPhrase instrument style triad) =
+adjustStyle newStyle flag (MusicPhrase instrument _ triad) =
     let
         style' = if flag then newStyle else None
     in

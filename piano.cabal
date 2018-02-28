@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e11004b87975b810266d9729515c3e6d362f5a8dc651848f6a7d4233973a3a7b
+-- hash: c686a6b4d050f5d67c3aed22243cded75fae48d9c84ad5c6fd4ceefb45d5870d
 
 name:           piano
 version:        0.1.0.0
@@ -37,6 +37,7 @@ library
       Crypto
       CryptoCurrency
       CryptoDedicatedStorage
+      CS194
       DrivingSpeed
       DrivingTrip
       DrivingWeather

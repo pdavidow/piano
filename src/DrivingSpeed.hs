@@ -6,7 +6,7 @@ module DrivingSpeed
     )
     where
 
-import Safeness ( Safeness(..), fmap)
+import Safeness ( Safeness(..), fmap )
 import TextPhrase ( TextPhrase, make, elagantize, emphasize )
 
 

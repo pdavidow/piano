@@ -19,6 +19,9 @@ import DrivingTrip ( isGoodTrip )
 import Crypto ( actualSafeness )
 import CryptoDedicatedStorage ( CryptoDedicatedStorage(..) )
 import CryptoCurrency ( CryptoCurrency(..) )
+--------------
+import CS194 ( ordPairs )
+--------------
 
 
 harp60 :: InstrumentMidiNum
@@ -322,5 +325,7 @@ main = hspec $ do
         it "Exchange UhohCoin" $ do
             (actualSafeness $ Exchange UhohCoin) `shouldBe` Unsafe UhohCoin            
  
-    
+    describe "OrdPairs" $ do
+        it "gives pairs" $ do
+            (ordPairs [1,2,3]) `shouldBe` [ (1,2), (1,3), (2,3) ]
                             

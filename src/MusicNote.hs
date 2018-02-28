@@ -9,6 +9,7 @@ module MusicNote
 import MidiNum ( MidiNum(..) )
 
 
+
 newtype Freq = Freq Float deriving (Eq, Ord, Show)
 
 
