@@ -25,8 +25,8 @@ data Gender = Male | Female deriving (Eq, Show)
 lookupOdds :: Gender -> Int
 lookupOdds gender =
     case gender of
-        Male   -> 30
-        Female -> 40
+        Male   -> 3
+        Female -> 4
 
 
 randomPickWithinOdds :: Int -> IO Int

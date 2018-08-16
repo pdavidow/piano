@@ -1,4 +1,5 @@
 import Test.Hspec
+import Test.HUnit.Lang (assertFailure) 
 import Data.Either ( isRight, isLeft, fromLeft, partitionEithers  )
 
 import MusicNote ( MusicNote(..) )
@@ -19,7 +20,7 @@ import DrivingTrip ( isGoodTrip )
 import Crypto ( actualSafeness )
 import CryptoDedicatedStorage ( CryptoDedicatedStorage(..) )
 import CryptoCurrency ( CryptoCurrency(..) )
-
+import Genealogy (Person(..), Gender(..), paternalGrandfather)
 
 harp60 :: InstrumentMidiNum
 harp60 = 
@@ -320,7 +321,11 @@ main = hspec $ do
         it "Exchange OkayCoin" $ do
             (actualSafeness $ Exchange OkayCoin) `shouldBe` Unsafe OkayCoin 
         it "Exchange UhohCoin" $ do
-            (actualSafeness $ Exchange UhohCoin) `shouldBe` Unsafe UhohCoin            
- 
-    
-                            
+            (actualSafeness $ Exchange UhohCoin) `shouldBe` Unsafe UhohCoin     
+            
+    describe "Genealogy" $ do 
+        it "paternalGrandfather" $ do -- need to run run several times to convince, since results are random-based
+            gf <- paternalGrandfather $ Person Male
+            if elem gf [Just $ Person Male, Nothing]
+                then pure ()
+                else assertFailure "paternalGrandfather"                            

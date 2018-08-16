@@ -27,6 +27,7 @@ dependencies:
 - mtl
 - transformers
 - random
+- HUnit
 
 library:
   source-dirs: src
