@@ -24,6 +24,9 @@ dependencies:
 - hspec
 - range
 - containers
+- mtl
+- transformers
+- random
 
 library:
   source-dirs: src

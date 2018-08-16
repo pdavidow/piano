@@ -1,5 +1,5 @@
 import Test.Hspec
-import Data.Either ( isRight, isLeft, fromRight, fromLeft, partitionEithers  )
+import Data.Either ( isRight, isLeft, fromLeft, partitionEithers  )
 
 import MusicNote ( MusicNote(..) )
 import PianoNotes ( nameFor, freqFor )
@@ -7,10 +7,10 @@ import MidiNum ( MidiNum(..), shiftBySemitone, shiftByOctave, toInt, basicShow )
 import MusicNote ( Freq(..) )
 import InstrumentMidiNum ( InstrumentMidiNum, InstrumentMidiNum_Invalid(..), make, basicShow ) 
 import Lib ( Direction(..) )
-import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
+import Triad ( Triad(..), Tone(..), notesFromTriad, rootPosition, firstInversion, secondInversionFromRootPosition, shiftTriadBySemitone, shiftTriadByOctave, arpeggiate, arpeggiateRun )
 import Instrument ( Instrument(..), midiNumRange )
-import InstrumentTriadNotes ( InstrumentTriadNotes(..), fromTriad ) 
-import TextPhrase ( TextPhrase(..),  Style(..), make, styles, elagantize, emphasize )
+import InstrumentTriadNotes ( fromTriad ) 
+import TextPhrase ( Style(..), make, styles, elagantize, emphasize )
 import MusicPhrase ( MusicPhrase(..), Style(..), style, elagantize, emphasize)
 import Safeness ( Safeness(..) )
 import DrivingSpeed ( DrivingSpeed(..), driverFeedback )
@@ -23,7 +23,7 @@ import CryptoCurrency ( CryptoCurrency(..) )
 
 harp60 :: InstrumentMidiNum
 harp60 = 
-    head rights where (lefts, rights) = partitionEithers [InstrumentMidiNum.make Harp $ MidiNum 60]
+    head rights where (_, rights) = partitionEithers [InstrumentMidiNum.make Harp $ MidiNum 60]
 
 
 main :: IO ()
