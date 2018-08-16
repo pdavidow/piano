@@ -6,7 +6,7 @@ module DrivingSpeed
     )
     where
 
-import Safeness ( Safeness(..), fmap)
+import Safeness ( Safeness(..))
 import TextPhrase ( TextPhrase, make, elagantize, emphasize )
 
 
@@ -35,6 +35,7 @@ driverFeedback :: DrivingSpeed -> TextPhrase
 driverFeedback x =
     let
         safeness = show <$> toSafeness x
+        safeness' = show $ toSafeness x
     in
         case safeness of
             (Unsafe s) -> emphasize True $ TextPhrase.make s

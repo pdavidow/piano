@@ -1,7 +1,6 @@
 module CryptoCurrency
     ( CryptoCurrency(..)
     , toSafeness
-    , toSafeness'
     )
     where
 
@@ -14,17 +13,12 @@ data CryptoCurrency
     deriving (Eq, Show)
 
 
-toSafeness' :: CryptoCurrency -> a -> Safeness a
-toSafeness' c a =
-    let
-        fn = 
-            case c of
+toSafeness :: CryptoCurrency -> Safeness CryptoCurrency
+toSafeness x = 
+    f x 
+    where f = 
+            case x of
                 SuperCoin -> VerySafe
                 OkayCoin -> Safe 
                 UhohCoin -> Unsafe 
-    in
-        fn a
-
-
-toSafeness :: CryptoCurrency -> Safeness CryptoCurrency
-toSafeness c = toSafeness' c c   
+  

@@ -1,8 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.20.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e11004b87975b810266d9729515c3e6d362f5a8dc651848f6a7d4233973a3a7b
+-- hash: a400082d10a6dfd00e4ff0e8d6195d7f6cdca7ef0a70e921a4c92d29a3415e7a
 
 name:           piano
 version:        0.1.0.0
@@ -16,7 +16,6 @@ license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
-
 extra-source-files:
     ChangeLog.md
     README.md

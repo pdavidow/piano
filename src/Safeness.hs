@@ -3,7 +3,7 @@
 module Safeness
     ( Safeness(..)
     , isNotUnsafe
-    , fmap
+    , (<$>) --fmap
     , (<*>)
     , (>>=)
     )
