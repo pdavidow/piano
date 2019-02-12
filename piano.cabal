@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d9a271ce2c69f27890a9c8868a98a0f11ccec16e98233efd3b81a7f8efb6fff4
+-- hash: c0a1b93dc00f4bf238aa8d1cab00efbd2b9d8bdfc20e77d4e486775924c5cf2c
 
 name:           piano
 version:        0.1.0.0
@@ -66,7 +66,7 @@ executable piano-exe
       Paths_piano
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Wincomplete-uni-patterns -Wincomplete-record-updates -Wpartial-fields -Wmissing-home-modules -Widentities -Wredundant-constraints -Wcpp-undef -Wmissing-export-lists
   build-depends:
       HUnit
     , base >=4.7 && <5

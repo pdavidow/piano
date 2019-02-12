@@ -7,7 +7,6 @@ module MusicPhrase
     )
     where
 
-import Lib ( Emphasized, Elagantized, emphasize, elagantize )
 import Instrument ( Instrument, isPolyphonic )
 import Triad ( Triad )
 
@@ -30,28 +29,18 @@ style (MusicPhrase _ s _) = s
 
 adjustStyle :: Style -> Bool -> MusicPhrase -> MusicPhrase
 adjustStyle newStyle flag (MusicPhrase instrument style triad) =
-    let
-        style' = if flag then newStyle else None
-    in
-        MusicPhrase instrument style' triad
+    MusicPhrase instrument style' triad
+        where style' = if flag then newStyle else None
 
 
-instance Elagantized MusicPhrase where
-    elagantize flag x = 
-        let
-            (MusicPhrase instrument _ _) = x
-            instrumentedStyle = elagantizedStyle instrument
-        in
-            adjustStyle instrumentedStyle flag x
+elagantize :: Bool -> MusicPhrase -> MusicPhrase
+elagantize flag x@(MusicPhrase instrument _ _) = 
+    adjustStyle (elagantizedStyle instrument) flag x
 
             
-instance Emphasized MusicPhrase where
-    emphasize flag x = 
-        let
-            (MusicPhrase instrument _ _) = x
-            instrumentedStyle = emphasizedStyle instrument
-        in
-            adjustStyle instrumentedStyle flag x
+emphasize :: Bool -> MusicPhrase -> MusicPhrase
+emphasize flag x@(MusicPhrase instrument _ _) = 
+    adjustStyle (emphasizedStyle instrument) flag x
 
 
 elagantizedStyle :: Instrument -> Style

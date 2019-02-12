@@ -40,6 +40,17 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+
+    # https://medium.com/mercury-bank/enable-all-the-warnings-a0517bc081c3
+    - -Wall
+    - -Wincomplete-uni-patterns
+    - -Wincomplete-record-updates
+    - -Wpartial-fields
+    - -Wmissing-home-modules
+    - -Widentities
+    - -Wredundant-constraints
+    - -Wcpp-undef
+    - -Wmissing-export-lists      
     dependencies:
     - piano
 

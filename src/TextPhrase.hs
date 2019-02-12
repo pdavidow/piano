@@ -9,7 +9,6 @@ module TextPhrase
     where
 
 import Data.Set as Set (Set, empty, insert, delete, toList )
-import Lib ( Emphasized, Elagantized, emphasize, elagantize )
 
 
 data TextPhrase = TextPhrase (Set Style) String deriving (Eq)
@@ -46,11 +45,11 @@ adjustStyle x flag (TextPhrase xs string) =
         TextPhrase xs' string
 
 
-instance Elagantized TextPhrase where
-    elagantize flag x = 
-        adjustStyle Italic flag x
+elagantize :: Bool -> TextPhrase -> TextPhrase
+elagantize flag x = 
+    adjustStyle Italic flag x
 
 
-instance Emphasized TextPhrase where
-    emphasize flag x = 
-        adjustStyle Bold flag x
+emphasize :: Bool -> TextPhrase -> TextPhrase    
+emphasize flag x = 
+    adjustStyle Bold flag x
